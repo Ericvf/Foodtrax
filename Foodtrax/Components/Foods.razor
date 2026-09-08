@@ -1,0 +1,60 @@
+﻿@using Foodtrax.Models
+@inject FoodRepository FoodRepository
+
+<div class="food-list">
+    @if (foods is null)
+    {
+        <p>Loading...</p>
+    }
+    else if (!foods.Any())
+    {
+        <p>No foods available.</p>
+    }
+    else
+    {
+        @foreach (var food in foods)
+        {
+            <button type="button"
+                    class="food-card"
+                    @onclick="() => SelectFood(food)">
+                <strong>@food.Name</strong>
+
+                <small>
+                    @food.Calories.ToString("0.#") kcal
+                    &nbsp;·&nbsp;
+                    @food.Proteins.ToString("0.#") g protein
+                    &nbsp;·&nbsp;
+                    per 100g
+                </small>
+            </button>
+}
+
+    }
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<Food> OnFoodSelected { get; set; }
+    private IEnumerable<Food>? foods;
+
+    private async Task SelectFood(Food food)
+    {
+        await OnFoodSelected.InvokeAsync(food);
+    }
+    
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFoods();
+    }
+
+    private async Task LoadFoods()
+    {
+        foods = await FoodRepository.GetAllAsync();
+    }
+
+    public async Task ReloadAsync()
+    {
+        foods = await FoodRepository.GetAllAsync();
+        StateHasChanged();
+    }
+}

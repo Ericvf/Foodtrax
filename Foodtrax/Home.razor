@@ -1,0 +1,39 @@
+﻿@page "/"
+@using Foodtrax.Models
+@inject IJSRuntime js
+@inject ConsumedFoodRepository ConsumedFoodRepository
+
+<PageTitle>FoodTrax - Food tracker</PageTitle>
+
+<h1 class="linear-wipe">Foodtrax</h1>
+
+<div id="app">
+    <Foods @ref="foodsComponent" OnFoodSelected="OnFoodSelected" />
+    <AddFood OnFoodAdded="ReloadFoods" />
+    <DailyFood @ref="dailyFoodComponent" />
+</div>
+
+
+<footer>Appbyfex v1.0</footer>
+
+@code {
+    private Foods? foodsComponent;
+    private DailyFood? dailyFoodComponent;
+
+    private async Task OnFoodSelected(Food food)
+    {
+        await ConsumedFoodRepository.AddAsync(
+            food.Id,
+            100,
+            DateTime.Now);
+
+        if (dailyFoodComponent is not null)
+            await dailyFoodComponent.ReloadAsync();
+    }
+
+    private async Task ReloadFoods()
+    {
+        if (foodsComponent is not null)
+            await foodsComponent.ReloadAsync();
+    }
+}

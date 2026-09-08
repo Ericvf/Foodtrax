@@ -1,0 +1,49 @@
+﻿@inject ConsumedFoodRepository ConsumedFoodRepository
+
+@if (consumedFoods is null)
+{
+    <p>Loading...</p>
+}
+else if (!consumedFoods.Any())
+{
+
+    <p>No food consumed today.</p>
+}
+else
+{
+    <table class="table">
+        <thead> <tr> <th>Time</th> <th>Food</th> <th>Weight</th> <th>Calories</th> <th>Protein</th> </tr> </thead>
+        <tbody>
+            @foreach (var food in consumedFoods)
+            {
+                <tr> <td>@food.ConsumedAt.ToLocalTime().ToString("HH:mm")</td> <td>@food.Name</td> <td>@food.Weight g</td> <td>@food.Calories.ToString("0.##")</td> <td>@food.Proteins.ToString("0.##") g</td> </tr>
+            }
+        </tbody>
+        <tfoot> <tr> <th colspan="3">Total</th> <th>@TotalCalories.ToString("0.##")</th> <th>@TotalProteins.ToString("0.##") g</th> </tr> </tfoot>
+    </table>
+}
+
+@code {
+    private IEnumerable<ConsumedFood>? consumedFoods;
+
+
+private double TotalCalories =>
+    consumedFoods?.Sum(x => x.Calories) ?? 0;
+
+    private double TotalProteins =>
+        consumedFoods?.Sum(x => x.Proteins) ?? 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReloadAsync();
+    }
+
+    public async Task ReloadAsync()
+    {
+        consumedFoods = await ConsumedFoodRepository.GetByDateAsync(DateTime.Today);
+
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+}

@@ -1,0 +1,64 @@
+﻿@using Foodtrax.Models
+@inject FoodRepository FoodRepository
+
+<button type="button" @onclick="ToggleForm">
+    @(showForm ? "Cancel" : "+ Add Food")
+</button>
+
+@if (showForm)
+{
+    <article>
+        <header>Add Food</header>
+
+        <EditForm Model="newFood" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <label>
+                Name
+                <InputText @bind-Value="newFood.Name" />
+            </label>
+
+            <label>
+                Calories per 100g
+                <InputNumber @bind-Value="newFood.Calories" />
+            </label>
+
+            <label>
+                Proteins per 100g (g)
+                <InputNumber @bind-Value="newFood.Proteins" />
+            </label>
+
+            <button type="submit">
+                Add Food
+            </button>
+        </EditForm>
+    </article>
+
+}
+
+@code {
+    private Food newFood = new();
+    private bool showForm;
+
+[Parameter]
+    public EventCallback<Food> OnFoodAdded { get; set; }
+
+    private void ToggleForm()
+    {
+        showForm = !showForm;
+    }
+
+    private async Task Submit()
+    {
+        var id = await FoodRepository.CreateAsync(newFood);
+
+        newFood.Id = id;
+
+        await OnFoodAdded.InvokeAsync(newFood);
+
+        newFood = new Food();
+        showForm = false;
+    }
+
+}
