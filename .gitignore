@@ -413,3 +413,5 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+app_debug.db
