@@ -8,7 +8,6 @@
 <PageTitle>FoodTrax - Food tracker - @userId</PageTitle>
 
 <h1 class="hero-title">FoodtraX</h1>
-
 @if (string.IsNullOrEmpty(userId))
 {
     <div id="app">
@@ -38,7 +37,7 @@ else
     <img src="/appbyfex.png" />
     @if (!string.IsNullOrEmpty(userId))
     {
-        <p>Logged in as user: @userId</p>
+        <p>logged in as user: <i>@userId</i></p>
     }
 </footer>
 

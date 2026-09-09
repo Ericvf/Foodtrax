@@ -333,3 +333,9 @@ button,
     display: flex;
     justify-content: flex-end;
 }
+
+dialog > article > form > button {
+    width:auto !important;
+    float:right;
+    min-width: 30%;
+}
