@@ -1,55 +1,129 @@
-﻿@page "/"
+﻿@page "/u/{userId}"
+@page "/"
 @using Foodtrax.Models
 @inject IJSRuntime js
 @inject ConsumedFoodRepository ConsumedFoodRepository
+@inject NavigationManager Navigation
 
-<PageTitle>FoodTrax - Food tracker</PageTitle>
+<PageTitle>FoodTrax - Food tracker - @userId</PageTitle>
 
 <h1 class="hero-title">Foodtrax</h1>
 
-<div id="app">
-    <AddFood OnFoodAdded="OnFoodAdded" />
-    <Foods FoodSelected="OnFoodSelected" @ref="foodsComponent" />
-    <DailyFood @ref="dailyFood" />
-    <AddConsumedFood OnConsumedFoodAdded="CustomConsumedFoodAdded" />
-</div>
+@if (string.IsNullOrEmpty(userId))
+{
+    <div id="app">
+        <form @onsubmit="UserSubmit" @onsubmit:preventDefault="true">
+            <label>
+                Name
+                <input @bind="loginUserId" />
+            </label>
 
-<dialog id="consume-food-dialog">
-    <article>
-        <header>
-            <button type="button" class="close" aria-label="Close" commandfor="consume-food-dialog" command="close"> </button>
+            <button type="submit">
+                Continue
+            </button>
+        </form>
+    </div>
+}
+else
+{
+    <div id="app">
+        <AddFood OnFoodAdded="OnFoodAdded" UserId="@userId" />
+        <Foods FoodSelected="OnFoodSelected" @ref="foodsComponent" UserId="@userId" />
+        <DailyFood @ref="dailyFood" UserId="@userId" />
+        <AddConsumedFood OnConsumedFoodAdded="CustomConsumedFoodAdded" />
+    </div>
+
+    <dialog id="consume-food-dialog">
+        <article>
+            <header>
+                <button type="button"
+                        class="close"
+                        aria-label="Close"
+                        commandfor="consume-food-dialog"
+                        command="close">
+                </button>
+
+                @if (selectedFood is not null)
+                {
+                    <strong>@selectedFood.Name</strong>
+                }
+            </header>
+
             @if (selectedFood is not null)
             {
-                <strong>@selectedFood.Name</strong>
-            }
-        </header> @if (selectedFood is not null) {
-        <label> Amount (@selectedFood.Unit) <InputNumber @bind-Value="consumedAmount" /> </label> <p> @CalculateCalories().ToString("0.##") kcal · @CalculateProteins().ToString("0.##") g protein </p> <footer> <button type="button" class="secondary" commandfor="consume-food-dialog" command="close"> Cancel </button> <button type="button" @onclick="SaveConsumedFood" commandfor="consume-food-dialog" command="close"> Add </button> </footer>
-    }
-</article>
-</dialog>
+                <label>
+                    Amount (@selectedFood.Unit)
+                    <InputNumber @bind-Value="consumedAmount" />
+                </label>
 
-<footer>Appbyfex v1.0</footer>
+                <p>
+                    @CalculateCalories().ToString("0.##") kcal ·
+                    @CalculateProteins().ToString("0.##") g protein
+                </p>
+
+                <footer>
+                    <button type="button"
+                            class="secondary"
+                            commandfor="consume-food-dialog"
+                            command="close">
+                        Cancel
+                    </button>
+
+                    <button type="button"
+                            @onclick="SaveConsumedFood"
+                            commandfor="consume-food-dialog"
+                            command="close">
+                        Add
+                    </button>
+                </footer>
+            }
+        </article>
+    </dialog>
+}
+
+<footer>
+    <h6>Logged in as user: @userId</h6>
+    Appbyfex v1.0
+</footer>
 
 @code {
+    [Parameter]
+    public string? userId { get; set; }
+    private string loginUserId = "";
+
     private Food? selectedFood;
     private double consumedAmount;
     private Foods? foodsComponent;
-
     private DailyFood? dailyFood;
+
+    private async Task UserSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(loginUserId))
+            return;
+
+        var value = Uri.EscapeDataString(loginUserId.Trim());
+        Navigation.NavigateTo($"u/{value}");
+    }
 
     private async Task OnFoodSelected(FoodSelectedEventArgs args)
     {
-        await ConsumedFoodRepository.AddAsync(args.Food, args.Amount, DateTime.Now);
+        args.Food.UserId = userId!;
+
+        await ConsumedFoodRepository.AddAsync(
+            args.Food,
+            args.Amount,
+            DateTime.Now);
+
         if (dailyFood is not null)
-        {
             await dailyFood.ReloadAsync();
-        }
     }
 
     private async Task SaveConsumedFood()
     {
         if (selectedFood is null || consumedAmount <= 0)
             return;
+
+        selectedFood.UserId = userId!;
 
         await ConsumedFoodRepository.AddAsync(
             selectedFood,
@@ -59,9 +133,7 @@
         selectedFood = null;
 
         if (dailyFood is not null)
-        {
             await dailyFood.ReloadAsync();
-        }
     }
 
     private double CalculateCalories()
@@ -90,9 +162,9 @@
             await foodsComponent.ReloadAsync();
     }
 
-    
     private async Task CustomConsumedFoodAdded(ConsumedFood food)
     {
+        food.UserId = userId!;
         food.Id = await ConsumedFoodRepository.AddCustomAsync(food);
 
         if (dailyFood is not null)

@@ -11,7 +11,7 @@ public class FoodRepository
         _sqlite = sqlite;
     }
 
-    public async Task<IEnumerable<Food>> GetAllAsync()
+    public async Task<IEnumerable<Food>> GetAllAsync(string userId)
     {
         using var connection = _sqlite.CreateConnection();
 
@@ -25,8 +25,12 @@ public class FoodRepository
                 Amount,
                 Unit
             FROM Food
+            WHERE UserId = @UserId
             ORDER BY Name
-            """);
+            """, new
+            {
+                UserId = userId
+            });
     }
 
     public async Task<Food?> GetByIdAsync(int id)
@@ -59,14 +63,16 @@ public class FoodRepository
                 Calories,
                 Proteins,
                 Unit,   
-                Amount
+                Amount,
+                UserId
             )
             VALUES (
                 @Name,
                 @Calories,
                 @Proteins,
                 @Unit,
-                @Amount
+                @Amount,
+                @UserId
             );
 
             SELECT last_insert_rowid();

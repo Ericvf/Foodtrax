@@ -13,5 +13,7 @@
         public double Calories { get; set; }
 
         public double Proteins { get; set; }
+
+        public string UserId { get; set; } = "";
     }
 }

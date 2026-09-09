@@ -23,7 +23,8 @@ public class ConsumedFoodRepository
             Unit,
             Amount,
             Calories,
-            Proteins
+            Proteins,
+            UserId
         )
         VALUES (
             @ConsumedAt,
@@ -31,7 +32,8 @@ public class ConsumedFoodRepository
             @Unit,
             @Amount,
             @Calories,
-            @Proteins
+            @Proteins,
+            @UserId
         );
 
         SELECT last_insert_rowid();
@@ -43,7 +45,8 @@ public class ConsumedFoodRepository
                 food.Unit,
                 food.Amount,
                 food.Calories,
-                food.Proteins
+                food.Proteins,
+                food.UserId
             });
     }
 
@@ -67,7 +70,8 @@ public class ConsumedFoodRepository
             Unit,
             Amount,
             Calories,
-            Proteins
+            Proteins,
+            UserId
         )
         VALUES (
             @ConsumedAt,
@@ -75,7 +79,8 @@ public class ConsumedFoodRepository
             @Unit,
             @Amount,
             @Calories,
-            @Proteins
+            @Proteins,
+            @UserId
         );
 
         SELECT last_insert_rowid();
@@ -87,7 +92,8 @@ public class ConsumedFoodRepository
                 food.Unit,
                 Amount = consumedAmount,
                 Calories = calories,
-                Proteins = proteins
+                Proteins = proteins,
+                food.UserId
             });
     }
 
@@ -105,7 +111,7 @@ public class ConsumedFoodRepository
         return affected > 0;
     }
 
-    public async Task<IEnumerable<ConsumedFood>> GetByDateAsync(DateTime date)
+    public async Task<IEnumerable<ConsumedFood>> GetByDateAsync(DateTime date, string userId)
     {
         using var connection = _sqlite.CreateConnection();
 
@@ -121,16 +127,20 @@ public class ConsumedFoodRepository
             Unit,
             Amount,
             Calories,
-            Proteins
+            Proteins,
+            UserId
         FROM ConsumedFood
         WHERE ConsumedAt >= @Start
           AND ConsumedAt < @End
+          AND UserId = @UserId
+          
         ORDER BY ConsumedAt
         """,
             new
             {
                 Start = start.ToString("O"),
-                End = end.ToString("O")
+                End = end.ToString("O"),
+                UserId = userId
             });
     }
 }

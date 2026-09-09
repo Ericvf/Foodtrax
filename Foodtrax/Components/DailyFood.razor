@@ -74,8 +74,10 @@ else
 }
 
 @code {
-    private IEnumerable<ConsumedFood>? consumedFoods;
+    [Parameter] public string? UserId { get; set; }
 
+    private IEnumerable<ConsumedFood>? consumedFoods;
+    
     private double TotalCalories =>
         consumedFoods?.Sum(x => x.Calories) ?? 0;
 
@@ -89,8 +91,7 @@ else
 
     public async Task ReloadAsync()
     {
-        consumedFoods =
-            await ConsumedFoodRepository.GetByDateAsync(DateTime.Today);
+        consumedFoods = await ConsumedFoodRepository.GetByDateAsync(DateTime.Today, UserId!);
 
         await InvokeAsync(StateHasChanged);
     }

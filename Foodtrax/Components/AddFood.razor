@@ -66,8 +66,13 @@
     [Parameter]
     public EventCallback<Food> OnFoodAdded { get; set; }
 
+    [Parameter]
+    public string? UserId { get; set; }
+
     private async Task Submit()
     {
+        newFood.UserId = UserId!;
+
         var id = await FoodRepository.CreateAsync(newFood);
 
         newFood.Id = id;

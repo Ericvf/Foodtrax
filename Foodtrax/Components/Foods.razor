@@ -83,6 +83,9 @@ else
     private ConsumeForm consumeForm = new();
 
     [Parameter]
+    public string? UserId { get; set; }
+
+    [Parameter]
     public EventCallback<FoodSelectedEventArgs> FoodSelected { get; set; }
 
     protected override async Task OnInitializedAsync()
@@ -92,7 +95,7 @@ else
 
     public async Task ReloadAsync()
     {
-        foods = await FoodRepository.GetAllAsync();
+        foods = await FoodRepository.GetAllAsync(UserId!);
         await InvokeAsync(StateHasChanged);
     }
 

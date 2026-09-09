@@ -34,7 +34,8 @@ namespace Foodtrax.Services
                     Unit TEXT NOT NULL,
                     Amount REAL NOT NULL,
                     Calories REAL NOT NULL,
-                    Proteins REAL NOT NULL
+                    Proteins REAL NOT NULL,
+                    UserId TEXT
                 );
 
                 CREATE TABLE IF NOT EXISTS ConsumedFood (
@@ -44,7 +45,8 @@ namespace Foodtrax.Services
                     Unit TEXT NOT NULL,
                     Amount REAL NOT NULL,
                     Calories REAL NOT NULL,
-                    Proteins REAL NOT NULL
+                    Proteins REAL NOT NULL,
+                    UserId TEXT
                 );
 
                 CREATE INDEX IF NOT EXISTS IX_ConsumedFood_ConsumedAt
