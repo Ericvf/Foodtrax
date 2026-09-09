@@ -1,11 +1,13 @@
 ﻿@using Foodtrax.Models
 @inject IJSRuntime JS
 
-<button type="button"
-        commandfor="add-custom-consumed-food-dialog"
-        command="show-modal">
-    ➕ Add Custom Entry
-</button>
+<div class="add-button-container">
+    <button type="button"
+            commandfor="add-custom-consumed-food-dialog"
+            command="show-modal">
+        ➕ Add Custom Entry
+    </button>
+</div>
 
 <dialog id="add-custom-consumed-food-dialog">
     <article>
@@ -60,7 +62,6 @@
             <button type="submit">
                 Add Entry
             </button>
-
         </EditForm>
     </article>
 </dialog>

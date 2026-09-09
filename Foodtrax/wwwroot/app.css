@@ -189,6 +189,7 @@ button,
 .food-table-wrapper {
     width: 100%;
     overflow-x: auto;
+    margin-bottom: 1rem;
 }
 
 .food-table {
@@ -223,3 +224,8 @@ button,
     .delete-button:hover {
         opacity: 1;
     }
+
+.add-button-container {
+    display: flex;
+    justify-content: flex-end;
+}

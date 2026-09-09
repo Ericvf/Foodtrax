@@ -1,11 +1,13 @@
 ﻿@using Foodtrax.Models
 @inject FoodRepository FoodRepository
 
-<button type="button"
-        commandfor="add-food-dialog"
-        command="show-modal">
-    ➕ Add Food
-</button>
+<div class="add-button-container">
+    <button type="button"
+            commandfor="add-food-dialog"
+            command="show-modal">
+        ➕ Add Food
+    </button>
+</div>
 
 <dialog id="add-food-dialog">
     <article>

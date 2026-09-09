@@ -82,8 +82,11 @@ else
 }
 
 <footer>
-    <h6>Logged in as user: @userId</h6>
-    Appbyfex v1.0
+    @if (!string.IsNullOrEmpty(userId))
+    {
+        <h6>Logged in as user: @userId</h6>
+    }
+    <img src="/appbyfex.png" />
 </footer>
 
 @code {
