@@ -118,8 +118,8 @@ button,
     position: absolute;
     top: 0.5rem;
     right: 0.5rem;
-    width: 2rem;
-    height: 2rem;
+    width: 1.5rem;
+    height: 1.5rem;
     padding: 0;
     border: none;
     background: rgba(255, 59, 48, 0.8);
@@ -130,7 +130,7 @@ button,
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    opacity: 0;
+    opacity: 0.1;
     transition: opacity 0.2s ease, background 0.2s ease;
 }
 
@@ -139,7 +139,7 @@ button,
 }
 
 .delete-food-btn:hover {
-    background: rgba(255, 59, 48, 1);
+    background: rgba(59, 59, 59, 0.8);
 }
 
 .delete-food-btn:active {
@@ -194,6 +194,100 @@ button,
     .delete-button:hover {
         opacity: 1;
     }
+
+/* Mobile responsive table */
+@media (max-width: 768px) {
+    .food-table-wrapper {
+        overflow-x: visible;
+    }
+
+    .food-table {
+        display: block;
+        border-collapse: collapse;
+    }
+
+        .food-table thead {
+            display: none;
+        }
+
+        .food-table tbody {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .food-table tbody tr {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1rem;
+            border: 1px solid #3a3a3a;
+            border-radius: 0.5rem;
+            background: #1a1a1a;
+        }
+
+        .food-table td {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0 !important;
+        }
+
+            .food-table td::before {
+                content: attr(data-label);
+                font-weight: 600;
+                color: #aaa;
+                min-width: 70px;
+            }
+
+        .food-table .delete-cell {
+            justify-content: flex-end;
+            width: auto;
+            padding: 0 !important;
+        }
+
+            .food-table .delete-cell::before {
+                display: none;
+            }
+
+        .food-table tfoot {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid #3a3a3a;
+            border-radius: 0.5rem;
+            background: #1a1a1a;
+        }
+
+        .food-table tfoot tr {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0;
+            border: none;
+            background: none;
+            gap: 0;
+        }
+
+            .food-table tfoot th {
+                display: flex;
+                justify-content: space-between;
+                font-weight: 600;
+                color: #aaa;
+                width: 100%;
+                padding: 0.5rem 0;
+            }
+
+                .food-table tfoot th:first-child {
+                    grid-column: 1 / -1;
+                }
+
+                .food-table tfoot th:nth-child(2) {
+                    margin-left: auto;
+                }
+}
 
 .add-button-container {
     display: flex;
