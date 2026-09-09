@@ -15,20 +15,54 @@ else
     <div class="food-list">
         @foreach (var food in foods)
         {
-            <button type="button"
-                    class="food-card"
-                    @onclick="() => SelectFood(food)">
-                <strong>@food.Name</strong>
+            <div class="food-card-container">
+                <button type="button"
+                        class="food-card"
+                        @onclick="() => SelectFood(food)">
+                    <strong>@food.Name</strong>
 
-                <small>
-                    @food.Amount @food.Unit ·
-                    @food.Calories.ToString("0.#") kcal ·
-                    @food.Proteins.ToString("0.#") g protein
-                </small>
-            </button>
+                    <small>
+                        @food.Amount @food.Unit ·
+                        @food.Calories.ToString("0.#") kcal ·
+                        @food.Proteins.ToString("0.#") g protein
+                    </small>
+                </button>
+                <button type="button"
+                        class="delete-food-btn"
+                        @onclick="() => ShowDeleteConfirmation(food)"
+                        aria-label="Delete food">
+                    ✕
+                </button>
+            </div>
         }
     </div>
 }
+
+<dialog id="delete-food-confirmation">
+    <article>
+        <header>
+            <h2>Delete Food?</h2>
+        </header>
+
+        <p>
+            Are you sure you want to delete <strong>@(foodToDelete?.Name ?? "this food")</strong>?
+            This action cannot be undone.
+        </p>
+
+        <footer>
+            <button type="button"
+                    class="secondary"
+                    @onclick="CancelDelete">
+                Cancel
+            </button>
+            <button type="button"
+                    class="contrast"
+                    @onclick="ConfirmDelete">
+                Delete
+            </button>
+        </footer>
+    </article>
+</dialog>
 
 <dialog id="consume-food-dialog">
     <article>
@@ -79,6 +113,8 @@ else
     private IEnumerable<Food>? foods;
 
     private Food? selectedFood;
+
+    private Food? foodToDelete;
 
     private ConsumeForm consumeForm = new();
 
@@ -161,5 +197,37 @@ else
     private class ConsumeForm
     {
         public double Amount { get; set; }
+    }
+
+    private async Task ShowDeleteConfirmation(Food food)
+    {
+        foodToDelete = food;
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.open",
+            "delete-food-confirmation");
+    }
+
+    private async Task CancelDelete()
+    {
+        foodToDelete = null;
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "delete-food-confirmation");
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (foodToDelete is null)
+            return;
+
+        var deleted = await FoodRepository.DeleteAsync(foodToDelete.Id);
+
+        if (deleted)
+        {
+            await CancelDelete();
+            await ReloadAsync();
+        }
     }
 }
