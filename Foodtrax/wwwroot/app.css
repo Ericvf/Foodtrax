@@ -288,7 +288,7 @@ button,
 }
 
 /* Tablet and mobile landscape - keep table layout */
-@media (orientation: landscape) and (max-height: 500px) {
+/*@media (orientation: landscape) and (max-height: 500px) {
     .food-table-wrapper {
         overflow-x: auto;
     }
@@ -354,7 +354,7 @@ button,
                 padding: 0.5rem;
                 width: auto;
             }
-}
+}*/
 
 .add-button-container {
     display: flex;
