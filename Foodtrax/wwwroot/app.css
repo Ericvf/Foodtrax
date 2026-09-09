@@ -133,4 +133,93 @@ body {
     .amount-unit label {
         margin-bottom: 0;
     }
-  
+
+
+button,
+[type="submit"],
+[type="button"] {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #f5f5f5;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+    button:hover,
+    [type="submit"]:hover,
+    [type="button"]:hover {
+        background: #383838;
+        border-color: #4a4a4a;
+    }
+
+    button:focus,
+    [type="submit"]:focus,
+    [type="button"]:focus {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+    }
+
+.hero-title {
+    text-align: center;
+    font-size: clamp(4rem, 12vw, 8rem);
+    font-weight: 800;
+    letter-spacing: -0.07em;
+    line-height: 1;
+    background: linear-gradient( 110deg, #ffffff 0%, #777777 35%, #ffffff 50%, #555555 65%, #ffffff 100% );
+    background-size: 250% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: titleShine 8s ease-in-out infinite;
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.12));
+}
+
+@keyframes titleShine {
+    0% {
+        background-position: 100% center;
+    }
+
+    50% {
+        background-position: 0% center;
+    }
+
+    100% {
+        background-position: 100% center;
+    }
+}
+
+.food-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.food-table {
+    width: 100%;
+    margin: 0;
+}
+
+    .food-table th,
+    .food-table td {
+        vertical-align: middle;
+    }
+
+.delete-cell {
+    width: 3rem;
+    text-align: right;
+}
+
+.delete-button {
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    color: inherit;
+    opacity: 0.45;
+}
+
+    .delete-button:hover {
+        opacity: 1;
+    }
