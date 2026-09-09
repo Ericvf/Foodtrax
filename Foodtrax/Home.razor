@@ -8,32 +8,94 @@
 <h1 class="linear-wipe">Foodtrax</h1>
 
 <div id="app">
-    <Foods @ref="foodsComponent" OnFoodSelected="OnFoodSelected" />
-    <AddFood OnFoodAdded="ReloadFoods" />
-    <DailyFood @ref="dailyFoodComponent" />
+    <AddFood OnFoodAdded="OnFoodAdded" />
+    <Foods FoodSelected="OnFoodSelected" @ref="foodsComponent" />
+    <DailyFood @ref="dailyFood" />
+    <AddConsumedFood OnConsumedFoodAdded="CustomConsumedFoodAdded" />
 </div>
 
+<dialog id="consume-food-dialog">
+    <article>
+        <header>
+            <button type="button" class="close" aria-label="Close" commandfor="consume-food-dialog" command="close"> </button>
+            @if (selectedFood is not null)
+            {
+                <strong>@selectedFood.Name</strong>
+            }
+        </header> @if (selectedFood is not null) {
+        <label> Amount (@selectedFood.Unit) <InputNumber @bind-Value="consumedAmount" /> </label> <p> @CalculateCalories().ToString("0.##") kcal · @CalculateProteins().ToString("0.##") g protein </p> <footer> <button type="button" class="secondary" commandfor="consume-food-dialog" command="close"> Cancel </button> <button type="button" @onclick="SaveConsumedFood" commandfor="consume-food-dialog" command="close"> Add </button> </footer>
+    }
+</article>
+</dialog>
 
 <footer>Appbyfex v1.0</footer>
 
 @code {
+    private Food? selectedFood;
+    private double consumedAmount;
     private Foods? foodsComponent;
-    private DailyFood? dailyFoodComponent;
 
-    private async Task OnFoodSelected(Food food)
+    private DailyFood? dailyFood;
+
+    private async Task OnFoodSelected(FoodSelectedEventArgs args)
     {
-        await ConsumedFoodRepository.AddAsync(
-            food.Id,
-            100,
-            DateTime.Now);
-
-        if (dailyFoodComponent is not null)
-            await dailyFoodComponent.ReloadAsync();
+        await ConsumedFoodRepository.AddAsync(args.Food, args.Amount, DateTime.Now);
+        if (dailyFood is not null)
+        {
+            await dailyFood.ReloadAsync();
+        }
     }
 
-    private async Task ReloadFoods()
+    private async Task SaveConsumedFood()
+    {
+        if (selectedFood is null || consumedAmount <= 0)
+            return;
+
+        await ConsumedFoodRepository.AddAsync(
+            selectedFood,
+            consumedAmount,
+            DateTime.Now);
+
+        selectedFood = null;
+
+        if (dailyFood is not null)
+        {
+            await dailyFood.ReloadAsync();
+        }
+    }
+
+    private double CalculateCalories()
+    {
+        if (selectedFood is null || selectedFood.Amount <= 0)
+            return 0;
+
+        return selectedFood.Calories *
+               consumedAmount /
+               selectedFood.Amount;
+    }
+
+    private double CalculateProteins()
+    {
+        if (selectedFood is null || selectedFood.Amount <= 0)
+            return 0;
+
+        return selectedFood.Proteins *
+               consumedAmount /
+               selectedFood.Amount;
+    }
+
+    private async Task OnFoodAdded(Food food)
     {
         if (foodsComponent is not null)
             await foodsComponent.ReloadAsync();
+    }
+
+    
+    private async Task CustomConsumedFoodAdded(ConsumedFood food)
+    {
+        food.Id = await ConsumedFoodRepository.AddCustomAsync(food);
+
+        if (dailyFood is not null)
+            await dailyFood.ReloadAsync();
     }
 }

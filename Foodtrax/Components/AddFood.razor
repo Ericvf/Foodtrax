@@ -1,14 +1,24 @@
 ﻿@using Foodtrax.Models
 @inject FoodRepository FoodRepository
 
-<button type="button" @onclick="ToggleForm">
-    @(showForm ? "Cancel" : "+ Add Food")
+<button type="button"
+        commandfor="add-food-dialog"
+        command="show-modal">
+    ➕ Add Food
 </button>
 
-@if (showForm)
-{
+<dialog id="add-food-dialog">
     <article>
-        <header>Add Food</header>
+        <header>
+            <button type="button"
+                    class="close"
+                    aria-label="Close"
+                    commandfor="add-food-dialog"
+                    command="close">
+            </button>
+
+            <strong>Add Food</strong>
+        </header>
 
         <EditForm Model="newFood" OnValidSubmit="Submit">
             <DataAnnotationsValidator />
@@ -19,35 +29,42 @@
                 <InputText @bind-Value="newFood.Name" />
             </label>
 
+            <div class="amount-unit">
+                <label>
+                    Amount
+                    <InputNumber @bind-Value="newFood.Amount" />
+                </label>
+
+                <label>
+                    Unit
+                    <InputText @bind-Value="newFood.Unit" />
+                </label>
+            </div>
             <label>
-                Calories per 100g
+                Calories
                 <InputNumber @bind-Value="newFood.Calories" />
             </label>
 
             <label>
-                Proteins per 100g (g)
+                Proteins (g)
                 <InputNumber @bind-Value="newFood.Proteins" />
             </label>
 
-            <button type="submit">
+            <button type="submit"
+                    commandfor="add-food-dialog"
+                    command="close">
                 Add Food
             </button>
+
         </EditForm>
     </article>
-
-}
+</dialog>
 
 @code {
     private Food newFood = new();
-    private bool showForm;
 
-[Parameter]
+    [Parameter]
     public EventCallback<Food> OnFoodAdded { get; set; }
-
-    private void ToggleForm()
-    {
-        showForm = !showForm;
-    }
 
     private async Task Submit()
     {
@@ -58,7 +75,5 @@
         await OnFoodAdded.InvokeAsync(newFood);
 
         newFood = new Food();
-        showForm = false;
     }
-
 }

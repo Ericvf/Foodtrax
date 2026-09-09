@@ -20,7 +20,7 @@ else
                 <span type="button" class="delete-button" title="Delete" aria-label="Delete @food.Name" @onclick="() => DeleteFood(food.Id)">🗑</span>
                 </div>
                 <div class="food-stats">
-                    <span>@food.Weight g</span> <span>@food.Calories.ToString("0.##") kcal</span> <span>@food.Proteins.ToString("0.##") g protein</span>
+                    <span>@food.Amount @food.Unit</span> <span>@food.Calories.ToString("0.##") kcal</span> <span>@food.Proteins.ToString("0.##") g protein</span>
                 </div>
             </article>
         }

@@ -1,14 +1,17 @@
-// window.appendLogLine = function (preElement, line) {
-//     var scrollToBottom = preElement.scrollHeight - preElement.clientHeight <= preElement.scrollTop + 3;
-//     if (line) {
-//         preElement.textContent += '\n' + line;
-//     }
-//     if (scrollToBottom) {
-//         preElement.scrollTop = preElement.scrollHeight;
-//     }
-// };
+window.foodDialog = {
+    open: function (id) {
+        const dialog = document.getElementById(id);
 
-// window.scrollToBottom = (el) => {
-//     if (!el) return;
-//     el.scrollTop = el.scrollHeight;
-// };
+        if (dialog) {
+            dialog.showModal();
+        }
+    },
+
+    close: function (id) {
+        const dialog = document.getElementById(id);
+
+        if (dialog) {
+            dialog.close();
+        }
+    }
+};

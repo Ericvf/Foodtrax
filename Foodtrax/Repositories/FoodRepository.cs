@@ -22,7 +22,8 @@ public class FoodRepository
                 Name,
                 Calories,
                 Proteins,
-                Weight
+                Amount,
+                Unit
             FROM Food
             ORDER BY Name
             """);
@@ -39,7 +40,8 @@ public class FoodRepository
                 Name,
                 Calories,
                 Proteins,
-                Weight
+                Unit,
+                Amount
             FROM Food
             WHERE Id = @Id
             """,
@@ -56,13 +58,15 @@ public class FoodRepository
                 Name,
                 Calories,
                 Proteins,
-                Weight
+                Unit,   
+                Amount
             )
             VALUES (
                 @Name,
                 @Calories,
                 @Proteins,
-                @Weight
+                @Unit,
+                @Amount
             );
 
             SELECT last_insert_rowid();

@@ -1,0 +1,93 @@
+﻿@using Foodtrax.Models
+@inject IJSRuntime JS
+
+<button type="button"
+        commandfor="add-custom-consumed-food-dialog"
+        command="show-modal">
+    ➕ Add Custom Entry
+</button>
+
+<dialog id="add-custom-consumed-food-dialog">
+    <article>
+        <header>
+            <button type="button"
+                    class="close"
+                    aria-label="Close"
+                    commandfor="add-custom-consumed-food-dialog"
+                    command="close">
+            </button>
+
+            <strong>Add Custom Entry</strong>
+        </header>
+
+        <EditForm Model="newConsumedFood" OnValidSubmit="Submit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <label>
+                Name
+                <InputText @bind-Value="newConsumedFood.Name" />
+            </label>
+
+            <div class="amount-unit">
+                <label>
+                    Amount
+                    <InputNumber @bind-Value="newConsumedFood.Amount" />
+                </label>
+
+                <label>
+                    Unit
+                    <InputText @bind-Value="newConsumedFood.Unit" />
+                </label>
+            </div>
+
+            <label>
+                Calories
+                <InputNumber @bind-Value="newConsumedFood.Calories" />
+            </label>
+
+            <label>
+                Proteins (g)
+                <InputNumber @bind-Value="newConsumedFood.Proteins" />
+            </label>
+
+            <label>
+                Consumed at
+                <InputDate @bind-Value="newConsumedFood.ConsumedAt"
+                           Type="InputDateType.DateTimeLocal" />
+            </label>
+
+            <button type="submit">
+                Add Entry
+            </button>
+
+        </EditForm>
+    </article>
+</dialog>
+
+@code {
+    private ConsumedFood newConsumedFood = CreateNewConsumedFood();
+
+    [Parameter]
+    public EventCallback<ConsumedFood> OnConsumedFoodAdded { get; set; }
+
+    private static ConsumedFood CreateNewConsumedFood()
+    {
+        return new ConsumedFood
+        {
+            ConsumedAt = DateTime.Now,
+            Unit = "g"
+        };
+    }
+
+    private async Task Submit()
+    {
+        await OnConsumedFoodAdded.InvokeAsync(newConsumedFood);
+
+        newConsumedFood = CreateNewConsumedFood();
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "add-custom-consumed-food-dialog");
+    }
+}

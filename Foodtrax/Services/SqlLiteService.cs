@@ -31,24 +31,24 @@ namespace Foodtrax.Services
                 CREATE TABLE IF NOT EXISTS Food (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     Name TEXT NOT NULL,
+                    Unit TEXT NOT NULL,
+                    Amount REAL NOT NULL,
                     Calories REAL NOT NULL,
-                    Proteins REAL NOT NULL,
-                    Weight REAL NOT NULL
+                    Proteins REAL NOT NULL
                 );
 
                 CREATE TABLE IF NOT EXISTS ConsumedFood (
                     Id INTEGER PRIMARY KEY AUTOINCREMENT,
                     ConsumedAt TEXT NOT NULL,
-                    FoodId INTEGER NOT NULL,
-                    Weight REAL NOT NULL,
-                    FOREIGN KEY (FoodId) REFERENCES Food(Id)
+                    Name TEXT NOT NULL,
+                    Unit TEXT NOT NULL,
+                    Amount REAL NOT NULL,
+                    Calories REAL NOT NULL,
+                    Proteins REAL NOT NULL
                 );
 
                 CREATE INDEX IF NOT EXISTS IX_ConsumedFood_ConsumedAt
                     ON ConsumedFood (ConsumedAt);
-
-                CREATE INDEX IF NOT EXISTS IX_ConsumedFood_FoodId
-                    ON ConsumedFood (FoodId);
             """;
 
             return command.ExecuteNonQueryAsync();

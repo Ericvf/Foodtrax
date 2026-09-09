@@ -1,17 +1,18 @@
 ﻿@using Foodtrax.Models
 @inject FoodRepository FoodRepository
+@inject IJSRuntime JS
 
-<div class="food-list">
-    @if (foods is null)
-    {
-        <p>Loading...</p>
-    }
-    else if (!foods.Any())
-    {
-        <p>No foods available.</p>
-    }
-    else
-    {
+@if (foods is null)
+{
+    <p>Loading...</p>
+}
+else if (!foods.Any())
+{
+    <p>No foods available.</p>
+}
+else
+{
+    <div class="food-list">
         @foreach (var food in foods)
         {
             <button type="button"
@@ -20,41 +21,142 @@
                 <strong>@food.Name</strong>
 
                 <small>
-                    @food.Calories.ToString("0.#") kcal
-                    &nbsp;·&nbsp;
+                    @food.Amount @food.Unit ·
+                    @food.Calories.ToString("0.#") kcal ·
                     @food.Proteins.ToString("0.#") g protein
-                    &nbsp;·&nbsp;
-                    per 100g
                 </small>
             </button>
+        }
+    </div>
 }
 
-    }
-</div>
+<dialog id="consume-food-dialog">
+    <article>
+        <header>
+            <button type="button"
+                    class="close"
+                    aria-label="Close"
+                    @onclick="CloseDialog">
+            </button>
+
+            @if (selectedFood is not null)
+            {
+                <strong>@selectedFood.Name</strong>
+            }
+        </header>
+
+        @if (selectedFood is not null)
+        {
+            <EditForm Model="consumeForm" OnValidSubmit="Submit">
+
+                <label>
+                    Amount (@selectedFood.Unit)
+
+                    <InputNumber @bind-Value="consumeForm.Amount" />
+                </label>
+
+                <p>
+                    @CalculateCalories().ToString("0.##") kcal ·
+                    @CalculateProteins().ToString("0.##") g protein
+                </p>
+
+                <button type="submit">
+                    Add
+                </button>
+@* 
+                <button type="button"
+                        class="secondary"
+                        @onclick="CloseDialog">
+                    Cancel
+                </button> *@
+
+            </EditForm>
+        }
+    </article>
+</dialog>
 
 @code {
-    [Parameter]
-    public EventCallback<Food> OnFoodSelected { get; set; }
     private IEnumerable<Food>? foods;
 
-    private async Task SelectFood(Food food)
-    {
-        await OnFoodSelected.InvokeAsync(food);
-    }
-    
+    private Food? selectedFood;
+
+    private ConsumeForm consumeForm = new();
+
+    [Parameter]
+    public EventCallback<FoodSelectedEventArgs> FoodSelected { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        await LoadFoods();
-    }
-
-    private async Task LoadFoods()
-    {
-        foods = await FoodRepository.GetAllAsync();
+        await ReloadAsync();
     }
 
     public async Task ReloadAsync()
     {
         foods = await FoodRepository.GetAllAsync();
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private async Task SelectFood(Food food)
+    {
+        selectedFood = food;
+
+        consumeForm = new ConsumeForm
+        {
+            Amount = food.Amount
+        };
+
+        await InvokeAsync(StateHasChanged);
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.open",
+            "consume-food-dialog");
+    }
+
+    private async Task CloseDialog()
+    {
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "consume-food-dialog");
+
+        selectedFood = null;
+    }
+
+    private async Task Submit()
+    {
+        if (selectedFood is null || consumeForm.Amount <= 0)
+            return;
+
+        await FoodSelected.InvokeAsync(new FoodSelectedEventArgs
+        {
+            Food = selectedFood,
+            Amount = consumeForm.Amount
+        });
+
+        await CloseDialog();
+    }
+
+    private double CalculateCalories()
+    {
+        if (selectedFood is null || selectedFood.Amount <= 0)
+            return 0;
+
+        return selectedFood.Calories *
+               consumeForm.Amount /
+               selectedFood.Amount;
+    }
+
+    private double CalculateProteins()
+    {
+        if (selectedFood is null || selectedFood.Amount <= 0)
+            return 0;
+
+        return selectedFood.Proteins *
+               consumeForm.Amount /
+               selectedFood.Amount;
+    }
+
+    private class ConsumeForm
+    {
+        public double Amount { get; set; }
     }
 }
