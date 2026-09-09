@@ -195,8 +195,8 @@ button,
         opacity: 1;
     }
 
-/* Mobile responsive table */
-@media (max-width: 768px) {
+/* Mobile portrait - card layout */
+@media (max-width: 768px) and (orientation: portrait) {
     .food-table-wrapper {
         overflow-x: visible;
     }
@@ -204,6 +204,7 @@ button,
     .food-table {
         display: block;
         border-collapse: collapse;
+        font-size: 0.9rem;
     }
 
         .food-table thead {
@@ -219,8 +220,6 @@ button,
         .food-table tbody tr {
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            padding: 1rem;
             border: 1px solid #3a3a3a;
             border-radius: 0.5rem;
             background: #1a1a1a;
@@ -230,7 +229,6 @@ button,
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0 !important;
         }
 
             .food-table td::before {
@@ -287,6 +285,75 @@ button,
                 .food-table tfoot th:nth-child(2) {
                     margin-left: auto;
                 }
+}
+
+/* Tablet and mobile landscape - keep table layout */
+@media (orientation: landscape) and (max-height: 500px) {
+    .food-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .food-table {
+        font-size: 0.85rem;
+    }
+
+        .food-table thead {
+            display: table-header-group;
+        }
+
+        .food-table tbody {
+            display: table-row-group;
+        }
+
+        .food-table tbody tr {
+            display: table-row;
+            border: none;
+            background: none;
+            padding: 0;
+            gap: 0;
+        }
+
+        .food-table td {
+            display: table-cell;
+            justify-content: initial;
+            padding: 0.5rem;
+        }
+
+            .food-table td::before {
+                display: none;
+            }
+
+        .food-table .delete-cell {
+            justify-content: initial;
+            width: 3rem;
+            text-align: right;
+            padding: 0.5rem !important;
+        }
+
+        .food-table tfoot {
+            display: table-footer-group;
+            gap: 0;
+            margin-top: 0;
+            padding: 0;
+            border: none;
+            background: none;
+        }
+
+        .food-table tfoot tr {
+            display: table-row;
+            justify-content: initial;
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            gap: 0;
+        }
+
+            .food-table tfoot th {
+                display: table-cell;
+                justify-content: initial;
+                padding: 0.5rem;
+                width: auto;
+            }
 }
 
 .add-button-container {
