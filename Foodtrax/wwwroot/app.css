@@ -55,17 +55,19 @@ button,
 
 .hero-title {
     text-align: center;
-    font-size: clamp(4rem, 12vw, 8rem);
-    font-weight: 800;
+    font-size: clamp(4rem, 8vw, 8rem);
+    font-weight: 700;
     letter-spacing: -0.07em;
     line-height: 1;
     background: linear-gradient( 110deg, #ffffff 0%, #777777 35%, #ffffff 50%, #555555 65%, #ffffff 100% );
     background-size: 250% auto;
     -webkit-background-clip: text;
     background-clip: text;
-    color: transparent;
+    color: royalblue;
     animation: titleShine 8s ease-in-out infinite;
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.12));
+
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0052ff, 0 0 70px #0052ff, 0 0 80px #0052ff, 0 0 100px #0052ff, 0 0 150px #0052ff;
 }
 
 @keyframes titleShine {
