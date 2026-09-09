@@ -32,61 +32,14 @@ else
         <DailyFood @ref="dailyFood" UserId="@userId" />
         <AddConsumedFood OnConsumedFoodAdded="CustomConsumedFoodAdded" />
     </div>
-
-    <dialog id="consume-food-dialog">
-        <article>
-            <header>
-                <button type="button"
-                        class="close"
-                        aria-label="Close"
-                        commandfor="consume-food-dialog"
-                        command="close">
-                </button>
-
-                @if (selectedFood is not null)
-                {
-                    <strong>@selectedFood.Name</strong>
-                }
-            </header>
-
-            @if (selectedFood is not null)
-            {
-                <label>
-                    Amount (@selectedFood.Unit)
-                    <InputNumber @bind-Value="consumedAmount" />
-                </label>
-
-                <p>
-                    @CalculateCalories().ToString("0.##") kcal ·
-                    @CalculateProteins().ToString("0.##") g protein
-                </p>
-
-                <footer>
-                    <button type="button"
-                            class="secondary"
-                            commandfor="consume-food-dialog"
-                            command="close">
-                        Cancel
-                    </button>
-
-                    <button type="button"
-                            @onclick="SaveConsumedFood"
-                            commandfor="consume-food-dialog"
-                            command="close">
-                        Add
-                    </button>
-                </footer>
-            }
-        </article>
-    </dialog>
 }
 
 <footer>
+    <img src="/appbyfex.png" />
     @if (!string.IsNullOrEmpty(userId))
     {
-        <h6>Logged in as user: @userId</h6>
+        <p>Logged in as user: @userId</p>
     }
-    <img src="/appbyfex.png" />
 </footer>
 
 @code {

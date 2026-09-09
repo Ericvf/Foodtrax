@@ -13,6 +13,28 @@ footer {
     text-align: center;
 }
 
+dialog > article button.close {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+    padding: 0;
+    border: none;
+    background: rgba(59, 59, 59, 0.8);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+    dialog > article button.close:hover {
+        background: rgba(255, 59, 48, 0.8);
+    }
+
 @keyframes subtleGradient {
     0% {
         background-position: 0% 50%;
@@ -196,7 +218,6 @@ button,
     width: 3rem;
     text-align: right;
     vertical-align: middle;
-    /*background:red;*/
 }
 
 .delete-button {

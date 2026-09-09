@@ -41,7 +41,14 @@ else
 <dialog id="delete-food-confirmation">
     <article>
         <header>
-            <h2>Delete Food?</h2>
+            <button type="button"
+                    class="close"
+                    aria-label="Close"
+                    @onclick="CancelDelete">
+                ✕
+            </button>
+
+            <h3>Delete Food?</h3>
         </header>
 
         <p>
@@ -50,11 +57,6 @@ else
         </p>
 
         <footer>
-            <button type="button"
-                    class="secondary"
-                    @onclick="CancelDelete">
-                Cancel
-            </button>
             <button type="button"
                     class="contrast"
                     @onclick="ConfirmDelete">
@@ -71,11 +73,12 @@ else
                     class="close"
                     aria-label="Close"
                     @onclick="CloseDialog">
+                ✕
             </button>
 
             @if (selectedFood is not null)
             {
-                <strong>@selectedFood.Name</strong>
+                <h3>@selectedFood.Name</h3>
             }
         </header>
 
