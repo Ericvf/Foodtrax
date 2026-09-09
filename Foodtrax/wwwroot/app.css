@@ -136,7 +136,8 @@ button,
     font-size: clamp(4rem, 8vw, 8rem);
     font-weight: 700;
     letter-spacing: -0.07em;
-    line-height: 1;
+    line-height: 0rem;
+    padding-top: 5rem;
     background: linear-gradient( 110deg, #ffffff 0%, #777777 35%, #ffffff 50%, #555555 65%, #ffffff 100% );
     background-size: 250% auto;
     -webkit-background-clip: text;
