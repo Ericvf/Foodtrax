@@ -46,8 +46,6 @@ else
     public string? userId { get; set; }
     private string loginUserId = "";
 
-    private Food? selectedFood;
-    private double consumedAmount;
     private Foods? foodsComponent;
     private DailyFood? dailyFood;
 
@@ -71,44 +69,6 @@ else
 
         if (dailyFood is not null)
             await dailyFood.ReloadAsync();
-    }
-
-    private async Task SaveConsumedFood()
-    {
-        if (selectedFood is null || consumedAmount <= 0)
-            return;
-
-        selectedFood.UserId = userId!;
-
-        await ConsumedFoodRepository.AddAsync(
-            selectedFood,
-            consumedAmount,
-            DateTime.Now);
-
-        selectedFood = null;
-
-        if (dailyFood is not null)
-            await dailyFood.ReloadAsync();
-    }
-
-    private double CalculateCalories()
-    {
-        if (selectedFood is null || selectedFood.Amount <= 0)
-            return 0;
-
-        return selectedFood.Calories *
-               consumedAmount /
-               selectedFood.Amount;
-    }
-
-    private double CalculateProteins()
-    {
-        if (selectedFood is null || selectedFood.Amount <= 0)
-            return 0;
-
-        return selectedFood.Proteins *
-               consumedAmount /
-               selectedFood.Amount;
     }
 
     private async Task OnFoodAdded(Food food)

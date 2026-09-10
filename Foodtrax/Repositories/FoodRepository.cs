@@ -2,14 +2,9 @@
 using Foodtrax.Models;
 using Foodtrax.Services;
 
-public class FoodRepository
+public class FoodRepository(SqlLiteService sqlite)
 {
-    private readonly SqlLiteService _sqlite;
-
-    public FoodRepository(SqlLiteService sqlite)
-    {
-        _sqlite = sqlite;
-    }
+    private readonly SqlLiteService _sqlite = sqlite;
 
     public async Task<IEnumerable<Food>> GetAllAsync(string userId)
     {
