@@ -1,5 +1,6 @@
 ﻿@using Foodtrax.Models
 @inject ConsumedFoodRepository ConsumedFoodRepository
+@inject IJSRuntime JS
 
 @if (consumedFoods is null)
 {
@@ -27,8 +28,9 @@ else
             <tbody>
                 @foreach (var food in consumedFoods)
                 {
+                    var localFood = food;
                     <tr>
-                    
+
                         <td data-label="Food">
                             <strong>@food.Name</strong>
                         </td>
@@ -51,7 +53,7 @@ else
                         <td class="delete-cell">
                             <button type="button"
                                     class="delete-dailyfood-btn"
-                                    @onclick="() => DeleteFood(food.Id)"
+                                    @onclick="() => ShowDeleteConfirmation(localFood)"
                                     aria-label="Delete food">
                                 ✕
                             </button>
@@ -72,11 +74,40 @@ else
     </div>
 }
 
+<dialog id="delete-daily-food-confirmation">
+    <article>
+        <header>
+            <button type="button"
+                    class="close"
+                    aria-label="Close"
+                    @onclick="CancelDelete">
+                ✕
+            </button>
+
+            <h3>Delete Food?</h3>
+        </header>
+
+        <p>
+            Are you sure you want to delete <strong>@(foodToDelete?.Name ?? "this food")</strong>?
+            This action cannot be undone.
+        </p>
+
+        <footer>
+            <button type="button"
+                    class="contrast"
+                    @onclick="ConfirmDelete">
+                Delete
+            </button>
+        </footer>
+    </article>
+</dialog>
+
 @code {
     [Parameter] public string? UserId { get; set; }
 
     private IEnumerable<ConsumedFood>? consumedFoods;
-    
+    private ConsumedFood? foodToDelete;
+
     private double TotalCalories =>
         consumedFoods?.Sum(x => x.Calories) ?? 0;
 
@@ -95,10 +126,32 @@ else
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task DeleteFood(int id)
+    private async Task ShowDeleteConfirmation(ConsumedFood food)
     {
-        await ConsumedFoodRepository.DeleteAsync(id);
+        foodToDelete = food;
 
+        await JS.InvokeVoidAsync(
+            "foodDialog.open",
+            "delete-daily-food-confirmation");
+    }
+
+    private async Task CancelDelete()
+    {
+        foodToDelete = null;
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "delete-daily-food-confirmation");
+    }
+
+    private async Task ConfirmDelete()
+    {
+        if (foodToDelete is null)
+            return;
+
+        await ConsumedFoodRepository.DeleteAsync(foodToDelete.Id);
+
+        await CancelDelete();
         await ReloadAsync();
     }
 }
