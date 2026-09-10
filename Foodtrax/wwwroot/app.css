@@ -404,18 +404,3 @@ dialog > article > form > button {
     min-width: 30%;
 }
 
-/* Blazor reconnection */
-#components-reconnect-modal {
-    background-color: #1e1e1e !important;
-    color: #fff !important;
-}
-
-    #components-reconnect-modal h5 {
-        color: #fff !important;
-    }
-
-    #components-reconnect-modal button {
-        background-color: #333 !important;
-        color: #fff !important;
-        border-color: #555 !important;
-    }
