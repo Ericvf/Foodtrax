@@ -1,4 +1,6 @@
-﻿@using Foodtrax.Models
+﻿@using System.Globalization
+@using System.Text
+@using Foodtrax.Models
 @inject FoodRepository FoodRepository
 @inject IJSRuntime JS
 
@@ -127,8 +129,35 @@ else
 
     public async Task ReloadAsync()
     {
-        foods = await FoodRepository.GetAllAsync(UserId!);
+        var unsortedfoods = await FoodRepository.GetAllAsync(UserId!);
+        foods = unsortedfoods
+            .OrderBy(s => RemoveLeadingEmojis(s.Name), StringComparer.CurrentCultureIgnoreCase)
+            .ToList();
+
         await InvokeAsync(StateHasChanged);
+    }
+
+
+    static string RemoveLeadingEmojis(string value)
+    {
+        var result = new StringBuilder();
+        bool leading = true;
+
+        foreach (var rune in value.EnumerateRunes())
+        {
+            if (leading && IsEmoji(rune))
+                continue;
+
+            leading = false;
+            result.Append(rune.ToString());
+        }
+
+        return result.ToString();
+    }
+
+    static bool IsEmoji(Rune rune)
+    {
+        return Rune.GetUnicodeCategory(rune) == UnicodeCategory.OtherSymbol;
     }
 
     private async Task SelectFood(Food food)
