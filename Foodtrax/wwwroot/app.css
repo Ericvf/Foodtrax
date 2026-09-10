@@ -21,19 +21,20 @@ dialog {
     animation: slideUp 0.4s ease-in forwards;
 }
 
-dialog[open]::backdrop {
-    animation: fadeInBackdrop 0.4s ease-out;
-}
+    dialog[open]::backdrop {
+        animation: fadeInBackdrop 0.4s ease-out;
+    }
 
-dialog::backdrop {
-    animation: fadeOutBackdrop 0.4s ease-in forwards;
-}
+    dialog::backdrop {
+        animation: fadeOutBackdrop 0.4s ease-in forwards;
+    }
 
 @keyframes slideDown {
     from {
         opacity: 0;
         transform: translateY(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -45,6 +46,7 @@ dialog::backdrop {
         opacity: 1;
         transform: translateY(0);
     }
+
     to {
         opacity: 0;
         transform: translateY(-20px);
@@ -55,6 +57,7 @@ dialog::backdrop {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
@@ -64,6 +67,7 @@ dialog::backdrop {
     from {
         opacity: 1;
     }
+
     to {
         opacity: 0;
     }
@@ -145,7 +149,6 @@ button,
     color: royalblue;
     animation: titleShine 8s ease-in-out infinite;
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.12));
-
     text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0052ff, 0 0 70px #0052ff, 0 0 80px #0052ff, 0 0 100px #0052ff, 0 0 150px #0052ff;
 }
 
@@ -321,13 +324,13 @@ button,
             gap: 1rem;
         }
 
-        .food-table tbody tr {
-            display: flex;
-            flex-direction: column;
-            border: 1px solid #3a3a3a;
-            border-radius: 0.5rem;
-            background: #1a1a1a;
-        }
+            .food-table tbody tr {
+                display: flex;
+                flex-direction: column;
+                border: 1px solid #3a3a3a;
+                border-radius: 0.5rem;
+                background: #1a1a1a;
+            }
 
         .food-table td {
             display: flex;
@@ -362,15 +365,15 @@ button,
             background: #1a1a1a;
         }
 
-        .food-table tfoot tr {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-left: 1rem;
-            border: none;
-            background: none;
-            gap: 0;
-        }
+            .food-table tfoot tr {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-left: 1rem;
+                border: none;
+                background: none;
+                gap: 0;
+            }
 
             .food-table tfoot th {
                 display: flex;
@@ -396,26 +399,23 @@ button,
 }
 
 dialog > article > form > button {
-    width:auto !important;
-    float:right;
+    width: auto !important;
+    float: right;
     min-width: 30%;
 }
 
 /* Blazor reconnection */
 #components-reconnect-modal {
-    background: #1e1e1e;
-    color: #fff;
-    border: 1px solid #444;
-    border-radius: 8px;
-    padding: 1.5rem;
+    background-color: #1e1e1e !important;
+    color: #fff !important;
 }
 
     #components-reconnect-modal h5 {
-        color: #fff;
+        color: #fff !important;
     }
 
     #components-reconnect-modal button {
-        background: #333;
-        color: #fff;
-        border: 1px solid #555;
+        background-color: #333 !important;
+        color: #fff !important;
+        border-color: #555 !important;
     }
