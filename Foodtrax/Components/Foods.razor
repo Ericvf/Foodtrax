@@ -145,7 +145,7 @@ else
 
         foreach (var rune in value.EnumerateRunes())
         {
-            if (leading && IsEmoji(rune))
+            if (leading && (IsEmoji(rune) || rune.ToString() == " "))
                 continue;
 
             leading = false;
