@@ -1,7 +1,6 @@
 ﻿@using Foodtrax.Models
 @inject FoodRepository FoodRepository
 @inject IJSRuntime JS
-@inject IJSRuntime JSRuntime
 
 @if (foods is null)
 {
@@ -39,7 +38,7 @@ else
     </div>
 }
 
-<dialog id="delete-food-confirmation" @ref="deleteDialogElement" class="@(isDeleteClosing ? "closing" : "")">
+<dialog id="delete-food-confirmation">
     <article>
         <header>
             <button type="button"
@@ -67,13 +66,13 @@ else
     </article>
 </dialog>
 
-<dialog id="consume-food-dialog" @ref="consumeDialogElement" class="@(isConsumeClosing ? "closing" : "")">
+<dialog id="consume-food-dialog">
     <article>
         <header>
             <button type="button"
                     class="close"
                     aria-label="Close"
-                    @onclick="CloseConsumeDialog">
+                    @onclick="CloseDialog">
                 ✕
             </button>
 
@@ -115,11 +114,6 @@ else
 
     private ConsumeForm consumeForm = new();
 
-    private ElementReference deleteDialogElement;
-    private ElementReference consumeDialogElement;
-    private bool isDeleteClosing = false;
-    private bool isConsumeClosing = false;
-
     [Parameter]
     public string? UserId { get; set; }
 
@@ -148,16 +142,17 @@ else
 
         await InvokeAsync(StateHasChanged);
 
-        isConsumeClosing = false;
-        await JSRuntime.InvokeVoidAsync("foodDialog.open", "consume-food-dialog");
+        await JS.InvokeVoidAsync(
+            "foodDialog.open",
+            "consume-food-dialog");
     }
 
-    private async Task CloseConsumeDialog()
+    private async Task CloseDialog()
     {
-        isConsumeClosing = true;
-        await Task.Delay(300); // Wait for animation to complete
-        await JSRuntime.InvokeVoidAsync("foodDialog.close", "consume-food-dialog");
-        isConsumeClosing = false;
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "consume-food-dialog");
+
         selectedFood = null;
     }
 
@@ -172,7 +167,7 @@ else
             Amount = consumeForm.Amount
         });
 
-        await CloseConsumeDialog();
+        await CloseDialog();
     }
 
     private double CalculateCalories()
@@ -204,17 +199,18 @@ else
     {
         foodToDelete = food;
 
-        isDeleteClosing = false;
-        await JSRuntime.InvokeVoidAsync("foodDialog.open", "delete-food-confirmation");
+        await JS.InvokeVoidAsync(
+            "foodDialog.open",
+            "delete-food-confirmation");
     }
 
     private async Task CancelDelete()
     {
-        isDeleteClosing = true;
-        await Task.Delay(300); // Wait for animation to complete
-        await JSRuntime.InvokeVoidAsync("foodDialog.close", "delete-food-confirmation");
-        isDeleteClosing = false;
         foodToDelete = null;
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "delete-food-confirmation");
     }
 
     private async Task ConfirmDelete()

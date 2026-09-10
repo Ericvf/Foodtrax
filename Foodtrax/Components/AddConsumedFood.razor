@@ -1,19 +1,22 @@
-﻿@inject IJSRuntime JS
-@inject IJSRuntime JSRuntime
+﻿@using Foodtrax.Models
+@inject IJSRuntime JS
 
 <div class="add-button-container">
-    <button type="button" @onclick="OpenDialog">
+    <button type="button"
+            commandfor="add-custom-consumed-food-dialog"
+            command="show-modal">
         ➕ Add Custom Entry
     </button>
 </div>
 
-<dialog id="add-custom-consumed-food-dialog" @ref="dialogElement" class="@(isClosing ? "closing" : "")">
+<dialog id="add-custom-consumed-food-dialog">
     <article>
         <header>
             <button type="button"
                     class="close"
                     aria-label="Close"
-                    @onclick="CloseDialog">
+                    commandfor="add-custom-consumed-food-dialog"
+                    command="close">
                 ✕
             </button>
 
@@ -66,8 +69,6 @@
 
 @code {
     private ConsumedFood newConsumedFood = CreateNewConsumedFood();
-    private ElementReference dialogElement;
-    private bool isClosing = false;
 
     [Parameter]
     public EventCallback<ConsumedFood> OnConsumedFoodAdded { get; set; }
@@ -81,26 +82,14 @@
         };
     }
 
-    private async Task OpenDialog()
-    {
-        isClosing = false;
-        await JSRuntime.InvokeVoidAsync("foodDialog.open", "add-custom-consumed-food-dialog");
-    }
-
-    private async Task CloseDialog()
-    {
-        isClosing = true;
-        await Task.Delay(300); 
-        await JSRuntime.InvokeVoidAsync("foodDialog.close", "add-custom-consumed-food-dialog");
-        isClosing = false;
-    }
-
     private async Task Submit()
     {
         await OnConsumedFoodAdded.InvokeAsync(newConsumedFood);
 
         newConsumedFood = CreateNewConsumedFood();
 
-        await CloseDialog();
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "add-custom-consumed-food-dialog");
     }
 }

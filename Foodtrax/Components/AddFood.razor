@@ -1,20 +1,22 @@
 ﻿@using Foodtrax.Models
 @inject FoodRepository FoodRepository
-@inject IJSRuntime JSRuntime
 
 <div class="add-button-container">
-    <button type="button" @onclick="OpenDialog">
+    <button type="button"
+            commandfor="add-food-dialog"
+            command="show-modal">
         ➕ Add Food
     </button>
 </div>
 
-<dialog id="add-food-dialog" @ref="dialogElement" class="@(isClosing ? "closing" : "")">
+<dialog id="add-food-dialog">
     <article>
         <header>
             <button type="button"
                     class="close"
                     aria-label="Close"
-                    @onclick="CloseDialog">
+                    commandfor="add-food-dialog"
+                    command="close">
                 ✕
             </button>
 
@@ -51,7 +53,9 @@
                 <InputNumber @bind-Value="newFood.Proteins" />
             </label>
 
-            <button type="submit">
+            <button type="submit"
+                    commandfor="add-food-dialog"
+                    command="close">
                 ➕ Add Food
             </button>
 
@@ -59,34 +63,14 @@
     </article>
 </dialog>
 
-<style>
-
-</style>
-
 @code {
     private Food newFood = new();
-    private ElementReference dialogElement;
-    private bool isClosing = false;
 
     [Parameter]
     public EventCallback<Food> OnFoodAdded { get; set; }
 
     [Parameter]
     public string? UserId { get; set; }
-
-    private async Task OpenDialog()
-    {
-        isClosing = false;
-        await JSRuntime.InvokeVoidAsync("foodDialog.open", "add-food-dialog");
-    }
-
-    private async Task CloseDialog()
-    {
-        isClosing = true;
-        await Task.Delay(300); // Wait for animation to complete
-        await JSRuntime.InvokeVoidAsync("foodDialog.close", "add-food-dialog");
-        isClosing = false;
-    }
 
     private async Task Submit()
     {
@@ -99,7 +83,5 @@
         await OnFoodAdded.InvokeAsync(newFood);
 
         newFood = new Food();
-
-        await CloseDialog();
     }
 }
