@@ -113,7 +113,7 @@ dialog > article button.close {
     margin: 2em;
 }
 
-#history h3{
+#history > h3{
     margin-top:2em;
 }
 
