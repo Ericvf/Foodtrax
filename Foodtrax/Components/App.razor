@@ -15,6 +15,28 @@
 
 <body>
     <Routes @rendermode="InteractiveServer" />
+
+    <div id="components-reconnect-modal" role="alertdialog" aria-labelledby="reconnect-title" aria-describedby="reconnect-description">
+        <div class="reconnect-dialog">
+            <div class="reconnect-icon" aria-hidden="true">↻</div>
+            <div class="reconnect-content">
+                <h2 id="reconnect-title">Connection interrupted</h2>
+                <p id="reconnect-description">Foodtrax lost its connection to the server.</p>
+                <p id="components-reconnect-current-attempt" class="reconnect-status" aria-live="polite">
+                    Trying to reconnect…
+                </p>
+                <div id="components-reconnect-failed" class="reconnect-status" role="alert">
+                    <p>We couldn’t reconnect automatically. Check your connection and try again.</p>
+                    <button id="components-reconnect-button" type="button">Try again</button>
+                </div>
+                <div id="components-reconnect-rejected" class="reconnect-status" role="alert">
+                    <p>Your session has expired. Reload the page to continue.</p>
+                    <button id="components-reconnect-dismiss" type="button">Reload page</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="_framework/blazor.web.js"></script>
 </body>
 
