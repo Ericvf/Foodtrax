@@ -109,8 +109,12 @@ dialog > article button.close {
     }
 }
 
-#app {
+#app, #history {
     margin: 2em;
+}
+
+#history h3{
+    margin-top:2em;
 }
 
 button,
@@ -518,7 +522,7 @@ button,
 .month-button {
     white-space: nowrap;
     text-decoration:none;
-    font-size:3rem;
+    font-size:1.5rem;
 
 }
 
@@ -541,7 +545,7 @@ button,
     .calendar th,
     .calendar td {
         border: 1px solid #333;
-        padding: 8px;
+        padding: 0px;
         text-align: center;
     }
 
@@ -549,9 +553,7 @@ button,
         background: #333;
     }
 
-    .calendar td {
-        height: 80px;
-    }
+  
 
 .day-button {
     display: flex;
@@ -559,7 +561,7 @@ button,
     justify-content: center;
     width: 100%;
     height: 100%;
-    min-height: 60px;
+    min-height: 3rem;
     text-decoration: none;
     font-size: 1.2rem;
     color:inherit;
