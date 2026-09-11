@@ -61,6 +61,10 @@
     <h3>@SelectedDate.ToString("MMMM dd, yyyy")</h3>
 
     <DailyFood @ref="dailyFood" UserId="@userId" SelectedDay="@SelectedDate" />
+
+    <button type="button" class="history-button" @onclick="GoToHome">
+        🏠 Home
+    </button>
 </div>
 
 <footer>
@@ -131,5 +135,10 @@
                 .Select(day => calendarStart.AddDays(week * 7 + day))
                 .ToArray();
         }
+    }
+
+    private void GoToHome()
+    {
+        Navigation.NavigateTo($"/u/{Uri.EscapeDataString(userId!)}");
     }
 }
