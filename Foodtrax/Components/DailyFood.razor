@@ -105,6 +105,8 @@ else
 @code {
     [Parameter] public string? UserId { get; set; }
 
+    [Parameter] public DateTime? SelectedDay { get; set; }
+
     private IEnumerable<ConsumedFood>? consumedFoods;
     private ConsumedFood? foodToDelete;
 
@@ -114,14 +116,14 @@ else
     private double TotalProteins =>
         consumedFoods?.Sum(x => x.Proteins) ?? 0;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         await ReloadAsync();
     }
 
     public async Task ReloadAsync()
     {
-        consumedFoods = await ConsumedFoodRepository.GetByDateAsync(DateTime.Today, UserId!);
+        consumedFoods = await ConsumedFoodRepository.GetByDateAsync(SelectedDay ?? DateTime.Today, UserId!);
 
         await InvokeAsync(StateHasChanged);
     }

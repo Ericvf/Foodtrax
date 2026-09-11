@@ -1,0 +1,137 @@
+﻿@page "/u/{userId}/h"
+@page "/u/{userId}/h/{SelectedMonth?}/{SelectedDay?}"
+@using Foodtrax.Models
+@using System.Globalization
+@inject IJSRuntime js
+@inject ConsumedFoodRepository ConsumedFoodRepository
+@inject NavigationManager Navigation
+
+<PageTitle>FoodTrax</PageTitle>
+
+<h1 class="hero-title">FoodtraX</h1>
+<div id="app">
+
+    @page "/calendar"
+
+    <div class="calendar-navigation">
+        <h3>@CurrentMonth.ToString("MMMM yyyy")</h3>
+    </div>
+
+    <div class="calendar-container">
+        <NavLink class="month-button"
+                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(-1):yyyyMM}")">
+            ⬅️
+        </NavLink>
+
+        <table class="calendar">
+            <thead>
+                <tr>
+                    @foreach (var day in Weekdays)
+                    {
+                        <th>@day</th>
+                    }
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var week in GetCalendarWeeks())
+                {
+                    <tr>
+                        @foreach (var day in week)
+                        {
+                            <td>
+                                @if (day.Month == CurrentMonth.Month)
+                                {
+                                    <NavLink class="@(day.Date == DateTime.Today ? "day-button day-button-today" : "day-button")"
+                                             href="@($"/u/{userId}/h/{CurrentMonth:yyyyMM}/{day:yyyyMMdd}")">
+                                        @day.Day
+                                    </NavLink>
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <NavLink class="month-button"
+                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(1):yyyyMM}")">
+            ➡️
+        </NavLink>
+    </div>
+
+    <h3>@SelectedDate.ToString("MMMM dd, yyyy")</h3>
+
+    <DailyFood @ref="dailyFood" UserId="@userId" SelectedDay="@SelectedDate" />
+</div>
+
+<footer>
+    <img src="/appbyfex.png" />
+    @if (!string.IsNullOrEmpty(userId))
+    {
+        <p>logged in as user: <i>@userId</i></p>
+    }
+</footer>
+
+@code {
+    [Parameter]
+    public string? userId { get; set; }
+    [Parameter]
+    public string? SelectedDay { get; set; }
+    private string loginUserId = "";
+    private DailyFood? dailyFood;
+
+    [Parameter]
+    public string? SelectedMonth { get; set; }
+
+    private DateTime CurrentMonth =>
+        DateTime.TryParseExact(
+            SelectedMonth,
+            "yyyyMM",
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out var currentMonth)
+            ? new DateTime(currentMonth.Year, currentMonth.Month, 1)
+            : new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+
+    private DateTime SelectedDate =>
+        DateTime.TryParseExact(
+            SelectedDay,
+            "yyyyMMdd",
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.None,
+            out var selectedDate)
+            ? selectedDate.Date
+            : DateTime.Today;
+
+    private readonly string[] Weekdays =
+    [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+    ];
+
+    private IEnumerable<DateTime[]> GetCalendarWeeks()
+    {
+        var firstDay = new DateTime(
+            CurrentMonth.Year,
+            CurrentMonth.Month,
+            1);
+
+        var daysBeforeFirst = ((int)firstDay.DayOfWeek + 6) % 7;
+
+        var calendarStart = firstDay.AddDays(-daysBeforeFirst);
+
+        for (var week = 0; week < 6; week++)
+        {
+            yield return Enumerable
+                .Range(0, 7)
+                .Select(day => calendarStart.AddDays(week * 7 + day))
+                .ToArray();
+        }
+    }
+}

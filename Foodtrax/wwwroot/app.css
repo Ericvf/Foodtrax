@@ -129,7 +129,7 @@ button,
         border-color: #4a4a4a;
     }
 
-    button:focus,
+    button:focus,   
     [type="submit"]:focus,
     [type="button"]:focus {
         box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
@@ -144,12 +144,13 @@ button,
     padding-top: 5rem;
     background: linear-gradient( 110deg, #ffffff 0%, #777777 35%, #ffffff 50%, #555555 65%, #ffffff 100% );
     background-size: 250% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip: content-box;
+    background-clip:  content-box;
     color: royalblue;
     animation: titleShine 8s ease-in-out infinite;
     filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.12));
-    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0052ff, 0 0 70px #0052ff, 0 0 80px #0052ff, 0 0 100px #0052ff, 0 0 150px #0052ff;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff, 0 0 40px #0052ff, 0 0 70px #0052ff, 0 0 80px #0052ff;
+    z-index:1;
 }
 
 @keyframes titleShine {
@@ -398,6 +399,7 @@ button,
     justify-content: flex-end;
 }
 
+/* Reconnect Modal */
 #components-reconnect-modal {
     position: fixed;
     z-index: 1000;
@@ -505,6 +507,70 @@ button,
         animation: none;
     }
 }
+
+/* Calendar */
+.calendar-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.month-button {
+    white-space: nowrap;
+    text-decoration:none;
+    font-size:3rem;
+
+}
+
+.history-button {
+    display: block;
+    margin: 1rem auto;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.calendar {
+    flex: 1;
+    width: auto;
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: auto;
+    margin-bottom: 1rem;
+}
+
+    .calendar th,
+    .calendar td {
+        border: 1px solid #333;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .calendar th {
+        background: #333;
+    }
+
+    .calendar td {
+        height: 80px;
+    }
+
+.day-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 60px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    color:inherit;
+}
+
+.day-button-today {
+    background: #555;
+}
+    .day-button:hover {
+        background: midnightblue;
+    }
 
 dialog > article > form > button {
     width: auto !important;

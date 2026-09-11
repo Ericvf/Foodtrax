@@ -30,6 +30,10 @@ else
         <Foods FoodSelected="OnFoodSelected" @ref="foodsComponent" UserId="@userId" />
         <DailyFood @ref="dailyFood" UserId="@userId" />
         <AddConsumedFood OnConsumedFoodAdded="CustomConsumedFoodAdded" />
+
+        <button type="button" class="history-button" @onclick="GoToHistory">
+            🗓️ View history
+        </button>
     </div>
 }
 
@@ -48,6 +52,11 @@ else
 
     private Foods? foodsComponent;
     private DailyFood? dailyFood;
+
+    private void GoToHistory()
+    {
+        Navigation.NavigateTo($"/u/{Uri.EscapeDataString(userId!)}/h/");
+    }
 
     private async Task UserSubmit()
     {
