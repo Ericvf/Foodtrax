@@ -38,7 +38,7 @@ public class ConsumedFoodRepository
         """,
             new
             {
-                ConsumedAt = food.ConsumedAt.ToString("O"),
+                ConsumedAt = food.ConsumedAt.ToUniversalTime().ToString("O"),
                 food.Name,
                 food.Unit,
                 food.Amount,
@@ -60,7 +60,7 @@ public class ConsumedFoodRepository
 
         using var connection = sqlite.CreateConnection();
 
-        return await connection.ExecuteScalarAsync<int>(
+            return await connection.ExecuteScalarAsync<int>(
             """
         INSERT INTO ConsumedFood (
             ConsumedAt,
@@ -85,7 +85,7 @@ public class ConsumedFoodRepository
         """,
             new
             {
-                ConsumedAt = consumedAt.ToString("O"),
+                ConsumedAt = consumedAt.ToUniversalTime().ToString("O"),
                 food.Name,
                 food.Unit,
                 Amount = consumedAmount,
