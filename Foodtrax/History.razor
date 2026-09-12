@@ -15,12 +15,7 @@
         <h3>@CurrentMonth.ToString("MMMM yyyy")</h3>
     </div>
 
-    <div class="calendar-container">
-        <NavLink class="month-button"
-                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(-1):yyyyMM}")">
-            ⬅️
-        </NavLink>
-
+    
         <table class="calendar">
             <thead>
                 <tr>
@@ -51,6 +46,13 @@
                 }
             </tbody>
         </table>
+
+
+    <div class="calendar-container">
+        <NavLink class="month-button"
+                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(-1):yyyyMM}")">
+            ⬅️
+        </NavLink>
 
         <NavLink class="month-button"
                  href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(1):yyyyMM}")">
