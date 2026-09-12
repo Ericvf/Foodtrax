@@ -1,10 +1,7 @@
-using Dapper;
 using Foodtrax.Components;
 using Foodtrax.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 builder.Services
     .AddSingleton<SqlLiteService>()
