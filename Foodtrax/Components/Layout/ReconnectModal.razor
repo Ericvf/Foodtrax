@@ -1,0 +1,53 @@
+﻿<script type="module" src="@Assets["Components/Layout/ReconnectModal.razor.js"]"></script>
+
+@* <dialog id="components-reconnect-modal" data-nosnippet>
+    <div class="components-reconnect-container">
+        <div class="components-rejoining-animation" aria-hidden="true">
+            <div></div>
+            <div></div>
+        </div>
+        <p class="components-reconnect-first-attempt-visible">
+            Rejoining the server...
+        </p>
+        <p class="components-reconnect-repeated-attempt-visible">
+            Rejoin failed... trying again in <span id="components-seconds-to-next-attempt"></span> seconds.
+        </p>
+        <p class="components-reconnect-failed-visible">
+            Failed to rejoin.<br />Please retry or reload the page.
+        </p>
+        <button id="components-reconnect-button" class="components-reconnect-failed-visible">
+            Retry
+        </button>
+        <p class="components-pause-visible">
+            The session has been paused by the server.
+        </p>
+        <button id="components-resume-button" class="components-pause-visible">
+            Resume
+        </button>
+        <p class="components-resume-failed-visible">
+            Failed to resume the session.<br />Please reload the page.
+        </p>
+    </div>
+</dialog>
+ *@
+
+          <div id="components-reconnect-modal" role="alertdialog" aria-labelledby="reconnect-title" aria-describedby="reconnect-description">
+        <div class="reconnect-dialog">
+            <div class="reconnect-icon" aria-hidden="true">↻</div>
+            <div class="reconnect-content">
+                <h2 id="reconnect-title">Connection interrupted</h2>
+                <p id="reconnect-description">Foodtrax lost its connection to the server.</p>
+                <p id="components-reconnect-current-attempt" class="reconnect-status" aria-live="polite">
+                    Trying to reconnect…
+                </p>
+                <div id="components-reconnect-failed" class="reconnect-status" role="alert">
+                    <p>We couldn’t reconnect automatically. Check your connection and try again.</p>
+                    <button id="components-reconnect-button" type="button">Try again</button>
+                </div>
+                <div id="components-reconnect-rejected" class="reconnect-status" role="alert">
+                    <p>Your session has expired. Reload the page to continue.</p>
+                    <button id="components-reconnect-dismiss" type="button" onclick="window.location.reload()">Reload page</button>
+                </div>
+            </div>
+        </div>
+    </div>
