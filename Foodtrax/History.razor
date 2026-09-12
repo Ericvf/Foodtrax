@@ -8,57 +8,58 @@
 
 <PageTitle>FoodTrax</PageTitle>
 
-<h1 class="hero-title">FoodtraX</h1>
-<div id="history">
+<h1 class="title">FoodtraX</h1>
+<div id="app">
+    <table class="calendar">
+        <thead>
+            <tr>
+                <td colspan="7">
+                    <div class="calendar-header-container">
+                        <NavLink class="month-button"
+                                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(-1):yyyyMM}/{SelectedDate.ToString("yyyyMMdd")}")">
+                            ⬅️
+                        </NavLink>
+                        <div class="calendar-navigation">
+                            <h3>@CurrentMonth.ToString("MMMM yyyy")</h3>
+                        </div>
 
-    <div class="calendar-navigation">
-        <h3>@CurrentMonth.ToString("MMMM yyyy")</h3>
-    </div>
+                        <NavLink class="month-button"
+                                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(1):yyyyMM}/{SelectedDate.ToString("yyyyMMdd")}")">
+                            ➡️
+                        </NavLink>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                @foreach (var day in Weekdays)
+                {
+                    <th>@day</th>
+                }
+            </tr>
+        </thead>
 
-    
-        <table class="calendar">
-            <thead>
+        <tbody>
+            @foreach (var week in GetCalendarWeeks())
+            {
                 <tr>
-                    @foreach (var day in Weekdays)
+                    @foreach (var day in week)
                     {
-                        <th>@day</th>
+                        <td>
+                            @if (day.Month == CurrentMonth.Month)
+                            {
+                                <NavLink class="@(day.Date == DateTime.Today ? "day-button day-button-today" : "day-button")"
+                                         href="@($"/u/{userId}/h/{CurrentMonth:yyyyMM}/{day:yyyyMMdd}")">
+                                    @day.Day
+                                </NavLink>
+                            }
+                        </td>
                     }
                 </tr>
-            </thead>
-
-            <tbody>
-                @foreach (var week in GetCalendarWeeks())
-                {
-                    <tr>
-                        @foreach (var day in week)
-                        {
-                            <td>
-                                @if (day.Month == CurrentMonth.Month)
-                                {
-                                    <NavLink class="@(day.Date == DateTime.Today ? "day-button day-button-today" : "day-button")"
-                                             href="@($"/u/{userId}/h/{CurrentMonth:yyyyMM}/{day:yyyyMMdd}")">
-                                        @day.Day
-                                    </NavLink>
-                                }
-                            </td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
+            }
+        </tbody>
+    </table>
 
 
-    <div class="calendar-container">
-        <NavLink class="month-button"
-                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(-1):yyyyMM}")">
-            ⬅️
-        </NavLink>
-
-        <NavLink class="month-button"
-                 href="@($"/u/{userId}/h/{CurrentMonth.AddMonths(1):yyyyMM}")">
-            ➡️
-        </NavLink>
-    </div>
 
     <h3>@SelectedDate.ToString("MMMM dd, yyyy")</h3>
 

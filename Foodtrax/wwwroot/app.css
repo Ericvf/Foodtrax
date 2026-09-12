@@ -1,5 +1,5 @@
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: Tahoma, 'Inter', sans-serif;
     margin: 0;
     padding: 0;
     min-height: 100vh;
@@ -8,92 +8,6 @@ body {
     animation: subtleGradient 20s ease infinite;
     color: #f5f5f5;
 }
-
-footer {
-    text-align: center;
-}
-
-dialog[open] {
-    animation: slideDown 0.4s ease-out;
-}
-
-dialog {
-    animation: slideUp 0.4s ease-in forwards;
-}
-
-    dialog[open]::backdrop {
-        animation: fadeInBackdrop 0.4s ease-out;
-    }
-
-    dialog::backdrop {
-        animation: fadeOutBackdrop 0.4s ease-in forwards;
-    }
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    to {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-}
-
-@keyframes fadeInBackdrop {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeOutBackdrop {
-    from {
-        opacity: 1;
-    }
-
-    to {
-        opacity: 0;
-    }
-}
-
-dialog > article button.close {
-    width: 2rem;
-    height: 2rem;
-    font-size: 2rem;
-    padding: 0;
-    border: none;
-    background: rgba(59, 59, 59, 0.8);
-    color: white;
-    border-radius: 50%;
-    font-size: 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin: 0;
-    transition: opacity 0.2s ease, background 0.2s ease;
-}
-
-    dialog > article button.close:hover {
-        background: rgba(255, 59, 48, 0.8);
-    }
 
 @keyframes subtleGradient {
     0% {
@@ -109,41 +23,18 @@ dialog > article button.close {
     }
 }
 
-#app, #history {
+footer {
+    text-align: center;
+}
+
+#app {
     margin: 2em;
 }
 
-#history > h3{
-    margin-top:2em;
-}
-
-button,
-[type="submit"],
-[type="button"] {
-    background: #2a2a2a;
-    border-color: #3a3a3a;
-    color: #f5f5f5;
-    transition: background 0.2s ease, border-color 0.2s ease;
-}
-
-    button:hover,
-    [type="submit"]:hover,
-    [type="button"]:hover {
-        background: #383838;
-        border-color: #4a4a4a;
-    }
-
-    button:focus,   
-    [type="submit"]:focus,
-    [type="button"]:focus {
-        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
-    }
-
-.hero-title {
+.title {
     text-align: center;
     font-size: clamp(4rem, 8vw, 8rem);
     letter-spacing: -0.07em;
- 
     -webkit-background-clip: text;
     background-clip: text;
     color: royalblue;
@@ -152,20 +43,7 @@ button,
     z-index: 1;
 }
 
-@keyframes titleShine {
-    0% {
-        background-position: 100% center;
-    }
-
-    50% {
-        background-position: 0% center;
-    }
-
-    100% {
-        background-position: 100% center;
-    }
-}
-
+/* Foods */
 .food-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -194,14 +72,44 @@ button,
 }
 
     .food-card strong {
-        font-size: 1.1rem;
         margin-bottom: 0.25rem;
     }
 
     .food-card small {
-        opacity: 0.7;
+        color:gray;
     }
 
+
+/* Buttons */
+button,
+[type="submit"],
+[type="button"] {
+    background: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #f5f5f5;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+    button:hover,
+    [type="submit"]:hover,
+    [type="button"]:hover {
+        background: #383838;
+        border-color: #4a4a4a;
+    }
+
+    button:focus,
+    [type="submit"]:focus,
+    [type="button"]:focus {
+        box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.12);
+    }
+
+
+.add-button-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Delete buttons */
 .delete-food-btn {
     position: absolute;
     top: 0.5rem;
@@ -244,6 +152,7 @@ button,
     opacity: 1;
 }
 
+
 .delete-food-btn:hover, .delete-dailyfood-btn:hover {
     background: rgba(255, 59, 48, 0.8);
 }
@@ -252,31 +161,6 @@ button,
     transform: scale(0.95);
 }
 
-.amount-unit {
-    display: grid;
-    grid-template-columns: 4fr 1fr;
-    gap: 1rem;
-}
-
-    .amount-unit label {
-        margin-bottom: 0;
-    }
-
-.food-table-wrapper {
-    width: 100%;
-    overflow-x: auto;
-    margin-bottom: 1rem;
-}
-
-.food-table {
-    width: 100%;
-    margin: 0;
-}
-
-    .food-table th,
-    .food-table td {
-        vertical-align: middle;
-    }
 
 .delete-cell {
     width: 3rem;
@@ -393,132 +277,20 @@ button,
                 }
 }
 
-.add-button-container {
-    display: flex;
-    justify-content: flex-end;
-}
-
-/* Reconnect Modal */
-#components-reconnect-modal {
-    position: fixed;
-    z-index: 1000;
-    inset: 0;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-    background: rgba(0, 0, 0, 0.72);
-    backdrop-filter: blur(5px);
-}
-
-#components-reconnect-modal.components-reconnect-show {
-    display: flex;
-    animation: reconnectFadeIn 0.25s ease-out;
-}
-
-#components-reconnect-modal.components-reconnect-hide {
-    display: none !important;
-}
-
-.reconnect-dialog {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
-    width: min(100%, 30rem);
-    padding: 1.5rem;
-    border: 1px solid #3a3a3a;
-    border-radius: 1rem;
-    background: linear-gradient(145deg, #202020, #111111);
-    box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.5), 0 0 2rem rgba(0, 82, 255, 0.12);
-}
-
-.reconnect-icon {
-    display: grid;
-    flex: 0 0 2.75rem;
-    place-items: center;
-    width: 2.75rem;
-    height: 2.75rem;
-    border: 1px solid rgba(80, 150, 255, 0.45);
-    border-radius: 50%;
-    color: #8db8ff;
-    font-size: 1.75rem;
-    animation: reconnectSpin 1.6s linear infinite;
-}
-
-.reconnect-content {
-    flex: 1;
-}
-
-.reconnect-content h2 {
-    margin: 0 0 0.4rem;
-    color: #f5f5f5;
-    font-size: 1.25rem;
-}
-
-.reconnect-content p {
-    margin: 0 0 1rem;
-    color: #bdbdbd;
-}
-
-.reconnect-status {
-    display: none;
-}
-
-#components-reconnect-current-attempt {
-    color: #8db8ff;
-}
-
-.reconnect-status button {
-    width: auto;
-    margin: 0;
-    padding: 0.6rem 1rem;
-}
-
-@keyframes reconnectFadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes reconnectSpin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@media (max-width: 480px) {
-    .reconnect-dialog {
-        padding: 1.25rem;
-    }
-
-    .reconnect-icon {
-        display: none;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    #components-reconnect-modal.components-reconnect-show,
-    .reconnect-icon {
-        animation: none;
-    }
-}
 
 /* Calendar */
-.calendar-container {
+.calendar-header-container {
     display: flex;
-    align-items: center;
+    align-items: stretch;
+    justify-content: space-between;
     gap: 1rem;
+    margin: 0 1rem 0 1rem;
 }
 
 .month-button {
     white-space: nowrap;
     text-decoration:none;
     font-size:1.5rem;
-
 }
 
 .history-button {
@@ -549,10 +321,9 @@ button,
     }
 
     .calendar td {
-        width: 10vw;
-        height: 10vw;
+        width: min(10vw, 100px);
+        height: min(10vw, 100px);
     }
-
 
 
 .day-button {
@@ -573,8 +344,108 @@ button,
         background: midnightblue;
     }
 
+/* Dialogs */
+
+
+dialog[open] {
+    animation: slideDown 0.4s ease-out;
+}
+
+dialog {
+    animation: slideUp 0.4s ease-in forwards;
+}
+
+    dialog[open]::backdrop {
+        animation: fadeInBackdrop 0.4s ease-out;
+    }
+
+    dialog::backdrop {
+        animation: fadeOutBackdrop 0.4s ease-in forwards;
+    }
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+}
+
+@keyframes fadeInBackdrop {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOutBackdrop {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
 dialog > article > form > button {
     width: auto !important;
     float: right;
     min-width: 30%;
 }
+
+
+dialog > article button.close {
+    width: 2rem;
+    height: 2rem;
+    font-size: 2rem;
+    padding: 0;
+    border: none;
+    background: rgba(59, 59, 59, 0.8);
+    color: white;
+    border-radius: 50%;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin: 0;
+    transition: opacity 0.2s ease, background 0.2s ease;
+}
+
+    dialog > article button.close:hover {
+        background: rgba(255, 59, 48, 0.8);
+    }
+
+
+
+
+.amount-unit {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+    gap: 1rem;
+}
+
+    .amount-unit label {
+        margin-bottom: 0;
+    }
+
