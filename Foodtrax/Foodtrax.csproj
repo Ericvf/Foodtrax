@@ -10,7 +10,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.1.79" />
-		<PackageReference Include="Docker.DotNet" Version="3.125.15" />
 		<PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.12" />
 	</ItemGroup>
 

@@ -1,5 +1,4 @@
-﻿@using Foodtrax.Models
-@inject IJSRuntime JS
+﻿@inject IJSRuntime JS
 
 <div class="add-button-container">
     <button type="button"
@@ -77,8 +76,7 @@
     {
         return new ConsumedFood
         {
-            ConsumedAt = DateTime.Now,
-            Unit = "g"
+            ConsumedAt = DateTime.Now
         };
     }
 

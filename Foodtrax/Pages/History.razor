@@ -1,6 +1,5 @@
 ﻿@page "/u/{userId}/h"
 @page "/u/{userId}/h/{SelectedMonth?}/{SelectedDay?}"
-@using Foodtrax.Models
 @using System.Globalization
 @inject IJSRuntime js
 @inject ConsumedFoodRepository ConsumedFoodRepository
@@ -83,7 +82,6 @@
     public string? userId { get; set; }
     [Parameter]
     public string? SelectedDay { get; set; }
-    private string loginUserId = "";
     private DailyFood? dailyFood;
 
     [Parameter]

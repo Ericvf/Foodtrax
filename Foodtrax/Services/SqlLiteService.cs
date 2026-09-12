@@ -1,31 +1,29 @@
 ﻿using Microsoft.Data.Sqlite;
 
-namespace Foodtrax.Services
+public class SqlLiteService
 {
-    public class SqlLiteService
+    private readonly string _connectionString;
+
+    public SqlLiteService(IConfiguration configuration)
     {
-        private readonly string _connectionString;
+        _connectionString =
+            configuration.GetConnectionString("DefaultConnection")!;
+    }
 
-        public SqlLiteService(IConfiguration configuration)
-        {
-            _connectionString =
-                configuration.GetConnectionString("DefaultConnection")!;
-        }
-
-        public SqliteConnection CreateConnection()
-        {
-            return new SqliteConnection(_connectionString);
-        }
+    public SqliteConnection CreateConnection()
+    {
+        return new SqliteConnection(_connectionString);
+    }
 
 
-        public Task Initialize()
-        {
-            using var connection = CreateConnection();
-            connection.Open();
+    public Task Initialize()
+    {
+        using var connection = CreateConnection();
+        connection.Open();
 
-            using var command = connection.CreateCommand();
+        using var command = connection.CreateCommand();
 
-            command.CommandText = """
+        command.CommandText = """
                 PRAGMA foreign_keys = ON;
 
                 CREATE TABLE IF NOT EXISTS Food (
@@ -53,7 +51,6 @@ namespace Foodtrax.Services
                     ON ConsumedFood (ConsumedAt);
             """;
 
-            return command.ExecuteNonQueryAsync();
-        }
+        return command.ExecuteNonQueryAsync();
     }
 }

@@ -1,6 +1,5 @@
 ﻿@using System.Globalization
 @using System.Text
-@using Foodtrax.Models
 @inject FoodRepository FoodRepository
 @inject IJSRuntime JS
 
@@ -31,7 +30,7 @@ else
                 </button>
                 <button type="button"
                         class="delete-food-btn"
-                        @onclick="() => ShowDeleteConfirmation(food)"
+                        @onclick="() => ShowDeleteDialog(food)"
                         aria-label="Delete food">
                     ✕
                 </button>
@@ -40,41 +39,13 @@ else
     </div>
 }
 
-<dialog id="delete-food-confirmation">
-    <article>
-        <header>
-            <button type="button"
-                    class="close"
-                    aria-label="Close"
-                    @onclick="CancelDelete">
-                ✕
-            </button>
-
-            <h3>Delete Food?</h3>
-        </header>
-
-        <p>
-            Are you sure you want to delete <strong>@(foodToDelete?.Name ?? "this food")</strong>?
-            This action cannot be undone.
-        </p>
-
-        <footer>
-            <button type="button"
-                    class="contrast"
-                    @onclick="ConfirmDelete">
-                Delete
-            </button>
-        </footer>
-    </article>
-</dialog>
-
 <dialog id="consume-food-dialog">
     <article>
         <header>
             <button type="button"
                     class="close"
                     aria-label="Close"
-                    @onclick="CloseDialog">
+                    @onclick="CloseFoodDialog">
                 ✕
             </button>
 
@@ -86,12 +57,18 @@ else
 
         @if (selectedFood is not null)
         {
-            <EditForm Model="consumeForm" OnValidSubmit="Submit">
+            <EditForm Model="consumeForm" OnValidSubmit="SubmitFoodDialog">
 
                 <label>
                     Amount (@selectedFood.Unit)
 
                     <InputNumber @bind-Value="consumeForm.Amount" />
+                </label>
+
+                <label>
+                    Consumed at
+                    <InputDate @bind-Value="consumeForm.ConsumedAt"
+                               Type="InputDateType.DateTimeLocal" />
                 </label>
 
                 <p>
@@ -107,20 +84,44 @@ else
     </article>
 </dialog>
 
+<dialog id="delete-food-confirmation">
+    <article>
+        <header>
+            <button type="button"
+                    class="close"
+                    aria-label="Close"
+                    @onclick="CloseDeleteDialog">
+                ✕
+            </button>
+
+            <h3>Delete Food?</h3>
+        </header>
+        <p>
+            Are you sure you want to delete <strong>@(foodToDelete?.Name ?? "this food")</strong>?
+            This action cannot be undone.
+        </p>
+        <footer>
+            <button type="button"
+                    class="contrast"
+                    @onclick="SubmitDeleteDialog">
+                Delete
+            </button>
+        </footer>
+    </article>
+</dialog>
+
 @code {
-    private IEnumerable<Food>? foods;
-
-    private Food? selectedFood;
-
-    private Food? foodToDelete;
-
-    private ConsumeForm consumeForm = new();
-
     [Parameter]
     public string? UserId { get; set; }
 
     [Parameter]
     public EventCallback<FoodSelectedEventArgs> FoodSelected { get; set; }
+
+    private IEnumerable<Food>? foods;
+
+    private ConsumeForm consumeForm = new();
+    private Food? selectedFood;
+    private Food? foodToDelete;
 
     protected override async Task OnInitializedAsync()
     {
@@ -135,29 +136,6 @@ else
             .ToList();
 
         await InvokeAsync(StateHasChanged);
-    }
-
-
-    static string RemoveLeadingEmojis(string value)
-    {
-        var result = new StringBuilder();
-        bool leading = true;
-
-        foreach (var rune in value.EnumerateRunes())
-        {
-            if (leading && (IsEmoji(rune) || rune.ToString() == " "))
-                continue;
-
-            leading = false;
-            result.Append(rune.ToString());
-        }
-
-        return result.ToString();
-    }
-
-    static bool IsEmoji(Rune rune)
-    {
-        return Rune.GetUnicodeCategory(rune) == UnicodeCategory.OtherSymbol;
     }
 
     private async Task SelectFood(Food food)
@@ -176,16 +154,7 @@ else
             "consume-food-dialog");
     }
 
-    private async Task CloseDialog()
-    {
-        await JS.InvokeVoidAsync(
-            "foodDialog.close",
-            "consume-food-dialog");
-
-        selectedFood = null;
-    }
-
-    private async Task Submit()
+    private async Task SubmitFoodDialog()
     {
         if (selectedFood is null || consumeForm.Amount <= 0)
             return;
@@ -196,7 +165,48 @@ else
             Amount = consumeForm.Amount
         });
 
-        await CloseDialog();
+        await CloseFoodDialog();
+    }
+
+    private async Task CloseFoodDialog()
+    {
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "consume-food-dialog");
+
+        selectedFood = null;
+    }
+
+    private async Task ShowDeleteDialog(Food food)
+    {
+        foodToDelete = food;
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.open",
+            "delete-food-confirmation");
+    }
+
+    private async Task CloseDeleteDialog()
+    {
+        foodToDelete = null;
+
+        await JS.InvokeVoidAsync(
+            "foodDialog.close",
+            "delete-food-confirmation");
+    }
+
+    private async Task SubmitDeleteDialog()
+    {
+        if (foodToDelete is null)
+            return;
+
+        var deleted = await FoodRepository.DeleteAsync(foodToDelete.Id);
+
+        if (deleted)
+        {
+            await CloseDeleteDialog();
+            await ReloadAsync();
+        }
     }
 
     private double CalculateCalories()
@@ -219,40 +229,25 @@ else
                selectedFood.Amount;
     }
 
-    private class ConsumeForm
+    private static string RemoveLeadingEmojis(string value)
     {
-        public double Amount { get; set; }
-    }
+        var result = new StringBuilder();
+        bool leading = true;
 
-    private async Task ShowDeleteConfirmation(Food food)
-    {
-        foodToDelete = food;
-
-        await JS.InvokeVoidAsync(
-            "foodDialog.open",
-            "delete-food-confirmation");
-    }
-
-    private async Task CancelDelete()
-    {
-        foodToDelete = null;
-
-        await JS.InvokeVoidAsync(
-            "foodDialog.close",
-            "delete-food-confirmation");
-    }
-
-    private async Task ConfirmDelete()
-    {
-        if (foodToDelete is null)
-            return;
-
-        var deleted = await FoodRepository.DeleteAsync(foodToDelete.Id);
-
-        if (deleted)
+        foreach (var rune in value.EnumerateRunes())
         {
-            await CancelDelete();
-            await ReloadAsync();
+            if (leading && (IsEmoji(rune) || rune.ToString() == " "))
+                continue;
+
+            leading = false;
+            result.Append(rune.ToString());
         }
+
+        return result.ToString();
+    }
+
+    private static bool IsEmoji(Rune rune)
+    {
+        return Rune.GetUnicodeCategory(rune) == UnicodeCategory.OtherSymbol;
     }
 }

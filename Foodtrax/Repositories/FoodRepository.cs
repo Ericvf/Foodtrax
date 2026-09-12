@@ -1,14 +1,12 @@
 ﻿using Dapper;
-using Foodtrax.Models;
-using Foodtrax.Services;
 
 public class FoodRepository(SqlLiteService sqlite)
 {
-    private readonly SqlLiteService _sqlite = sqlite;
+    private readonly SqlLiteService sqlite = sqlite;
 
     public async Task<IEnumerable<Food>> GetAllAsync(string userId)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         return await connection.QueryAsync<Food>(
             """
@@ -30,7 +28,7 @@ public class FoodRepository(SqlLiteService sqlite)
 
     public async Task<Food?> GetByIdAsync(int id)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         return await connection.QuerySingleOrDefaultAsync<Food>(
             """
@@ -49,7 +47,7 @@ public class FoodRepository(SqlLiteService sqlite)
 
     public async Task<int> CreateAsync(Food food)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         return await connection.ExecuteScalarAsync<int>(
             """
@@ -77,7 +75,7 @@ public class FoodRepository(SqlLiteService sqlite)
 
     public async Task<bool> DeleteAsync(int id)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         var affected = await connection.ExecuteAsync(
             "DELETE FROM Food WHERE Id = @Id",

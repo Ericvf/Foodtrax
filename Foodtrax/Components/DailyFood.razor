@@ -1,5 +1,4 @@
-﻿@using Foodtrax.Models
-@inject ConsumedFoodRepository ConsumedFoodRepository
+﻿@inject ConsumedFoodRepository ConsumedFoodRepository
 @inject IJSRuntime JS
 
 @if (consumedFoods is null)
@@ -24,7 +23,6 @@ else
                     <th></th>
                 </tr>
             </thead>
-
             <tbody>
                 @foreach (var food in consumedFoods)
                 {
@@ -53,7 +51,7 @@ else
                         <td class="delete-cell">
                             <button type="button"
                                     class="delete-dailyfood-btn"
-                                    @onclick="() => ShowDeleteConfirmation(localFood)"
+                                    @onclick="() => ShowDeleteDialog(localFood)"
                                     aria-label="Delete food">
                                 ✕
                             </button>
@@ -62,7 +60,6 @@ else
                     </tr>
                 }
             </tbody>
-
             <tfoot>
                 <tr>
                     <th colspan="2">Total</th>
@@ -80,10 +77,9 @@ else
             <button type="button"
                     class="close"
                     aria-label="Close"
-                    @onclick="CancelDelete">
+                    @onclick="CloseDeleteDialog">
                 ✕
             </button>
-
             <h3>Delete Food?</h3>
         </header>
 
@@ -95,7 +91,7 @@ else
         <footer>
             <button type="button"
                     class="contrast"
-                    @onclick="ConfirmDelete">
+                    @onclick="SubmitDeleteDialog">
                 Delete
             </button>
         </footer>
@@ -103,18 +99,17 @@ else
 </dialog>
 
 @code {
-    [Parameter] public string? UserId { get; set; }
+    [Parameter] 
+    public string? UserId { get; set; }
 
-    [Parameter] public DateTime? SelectedDay { get; set; }
+    [Parameter] 
+    public DateTime? SelectedDay { get; set; }
 
     private IEnumerable<ConsumedFood>? consumedFoods;
     private ConsumedFood? foodToDelete;
 
-    private double TotalCalories =>
-        consumedFoods?.Sum(x => x.Calories) ?? 0;
-
-    private double TotalProteins =>
-        consumedFoods?.Sum(x => x.Proteins) ?? 0;
+    private double TotalCalories => consumedFoods?.Sum(x => x.Calories) ?? 0;
+    private double TotalProteins => consumedFoods?.Sum(x => x.Proteins) ?? 0;
 
     protected override async Task OnParametersSetAsync()
     {
@@ -124,11 +119,10 @@ else
     public async Task ReloadAsync()
     {
         consumedFoods = await ConsumedFoodRepository.GetByDateAsync(SelectedDay ?? DateTime.Today, UserId!);
-
         await InvokeAsync(StateHasChanged);
     }
 
-    private async Task ShowDeleteConfirmation(ConsumedFood food)
+    private async Task ShowDeleteDialog(ConsumedFood food)
     {
         foodToDelete = food;
 
@@ -137,7 +131,7 @@ else
             "delete-daily-food-confirmation");
     }
 
-    private async Task CancelDelete()
+    private async Task CloseDeleteDialog()
     {
         foodToDelete = null;
 
@@ -146,14 +140,14 @@ else
             "delete-daily-food-confirmation");
     }
 
-    private async Task ConfirmDelete()
+    private async Task SubmitDeleteDialog()
     {
         if (foodToDelete is null)
             return;
 
         await ConsumedFoodRepository.DeleteAsync(foodToDelete.Id);
 
-        await CancelDelete();
+        await CloseDeleteDialog();
         await ReloadAsync();
     }
 }

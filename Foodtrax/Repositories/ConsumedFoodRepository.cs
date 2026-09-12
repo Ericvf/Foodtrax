@@ -1,19 +1,17 @@
 ﻿using Dapper;
-using Foodtrax.Models;
-using Foodtrax.Services;
 
 public class ConsumedFoodRepository
 {
-    private readonly SqlLiteService _sqlite;
+    private readonly SqlLiteService sqlite;
 
     public ConsumedFoodRepository(SqlLiteService sqlite)
     {
-        _sqlite = sqlite;
+        this.sqlite = sqlite;
     }
 
     public async Task<int> AddCustomAsync(ConsumedFood food)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         return await connection.ExecuteScalarAsync<int>(
             """
@@ -60,7 +58,7 @@ public class ConsumedFoodRepository
         var calories = food.Calories * multiplier;
         var proteins = food.Proteins * multiplier;
 
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         return await connection.ExecuteScalarAsync<int>(
             """
@@ -99,7 +97,7 @@ public class ConsumedFoodRepository
 
     public async Task<bool> DeleteAsync(int id)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         var affected = await connection.ExecuteAsync(
             """
@@ -113,7 +111,7 @@ public class ConsumedFoodRepository
 
     public async Task<IEnumerable<ConsumedFood>> GetByDateAsync(DateTime date, string userId)
     {
-        using var connection = _sqlite.CreateConnection();
+        using var connection = sqlite.CreateConnection();
 
         var start = date.Date;
         var end = start.AddDays(1);

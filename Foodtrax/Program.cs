@@ -1,5 +1,4 @@
-using Foodtrax.Components;
-using Foodtrax.Services;
+using Foodtrax;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +26,5 @@ using (var scope = app.Services.CreateScope())
 
     await sqlite.Initialize();
 }
-
 
 await app.RunAsync();
