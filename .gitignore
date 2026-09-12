@@ -414,4 +414,4 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
-app_debug.db
+app.db
