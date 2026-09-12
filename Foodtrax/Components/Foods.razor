@@ -144,7 +144,8 @@ else
 
         consumeForm = new ConsumeForm
         {
-            Amount = food.Amount
+            Amount = food.Amount,
+            ConsumedAt = DateTime.Now
         };
 
         await InvokeAsync(StateHasChanged);
@@ -162,7 +163,8 @@ else
         await FoodSelected.InvokeAsync(new FoodSelectedEventArgs
         {
             Food = selectedFood,
-            Amount = consumeForm.Amount
+            Amount = consumeForm.Amount,
+            ConsumedAt = consumeForm.ConsumedAt
         });
 
         await CloseFoodDialog();

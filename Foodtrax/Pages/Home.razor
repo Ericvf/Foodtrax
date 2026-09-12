@@ -73,7 +73,7 @@ else
         await ConsumedFoodRepository.AddAsync(
             args.Food,
             args.Amount,
-            DateTime.Now);
+            args.ConsumedAt);
 
         if (dailyFood is not null)
             await dailyFood.ReloadAsync();
